@@ -882,10 +882,24 @@ render();
    buildDrawingCandidates(), most-specific first (e.g. WS_5_CENTRE.dxf).
 
    This site is served over https:// (GitHub Pages), so a normal fetch()
-   + Blob download works correctly and reliably — no file:// workarounds
-   needed. The file is downloaded exactly as committed to the repo, no
-   text rewriting, no dimension substitution.
+   + Blob download works correctly and reliably. The FILE CONTENT is
+   downloaded exactly as committed to the repo — no text rewriting, no
+   dimension substitution. Only the saved-as FILENAME is renamed to a
+   descriptive, configuration-specific name, e.g.:
+     SHOP_DWG_BTB_2P_CENTRE_PRIV_L1500_D800_H1050.dxf
+   built from the current Type / Person-count / Flap / Privacy / L / D / H.
 */
+
+function buildShopDwgFilename(lk, fs){
+  const typeTag = fs ? 'FST' : 'BTB';
+  const personTag = fs ? '' : `_${state.person}P`;
+  const flap = state.accessFlap.toUpperCase(); // LHS | RHS | CENTRE | NO
+  const flapTag = flap === 'NO' ? 'NOFLAP' : flap;
+  const privTag = state.privacy.toLowerCase() === 'no' ? 'NOPRIV' : 'PRIV';
+
+  return `SHOP_DWG_${typeTag}${personTag}_${flapTag}_${privTag}` +
+         `_L${state.length}_D${state.depth}_H${state.height}.dxf`;
+}
 
 document.getElementById('downloadDxfBtn').addEventListener('click', () => {
   const fs = isFS();
@@ -898,9 +912,13 @@ document.getElementById('downloadDxfBtn').addEventListener('click', () => {
   const candidates = buildDrawingCandidates(lk);
   if(candidates.length === 0){ showToast('No shop drawing mapped for this configuration'); return; }
 
-  // Most-specific candidate, e.g. "./Drawings/WS_2_CENTRE.dxf"
-  const url      = candidates[0];
-  const filename = url.split('/').pop();
+  // Most-specific candidate, e.g. "./Drawings/WS_2_CENTRE.dxf" — this is
+  // the actual file fetched; its CONTENT is downloaded unchanged.
+  const url = candidates[0];
+
+  // Descriptive name the saved file is given on the user's machine, e.g.
+  // "SHOP_DWG_BTB_2P_CENTRE_PRIV_L1500_D800_H1050.dxf"
+  const downloadName = buildShopDwgFilename(lk, fs);
 
   showToast('Preparing shop drawing…');
 
@@ -912,15 +930,15 @@ document.getElementById('downloadDxfBtn').addEventListener('click', () => {
     .then(blob => {
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = filename;
+      link.download = downloadName;
       document.body.appendChild(link);
       link.click();
       link.remove();
       setTimeout(() => URL.revokeObjectURL(link.href), 5000);
-      showToast(`Downloaded ${filename}`);
+      showToast(`Downloaded ${downloadName}`);
     })
     .catch(() => {
-      showToast(`Shop drawing not found: ${filename}`);
+      showToast(`Shop drawing not found: ${url.split('/').pop()}`);
     });
 });
 

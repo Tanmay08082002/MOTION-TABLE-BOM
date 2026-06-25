@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOTION PLUS — Workstation Configurator</title>
+<style>
+:root{
+  --ink:#1b2430;
+  --steel:#3a4a5c;
+  --line:#d8dee4;
+  --paper:#f3f5f7;
+  --panel:#ffffff;
+  --amber:#e08a1e;
+  --amber-deep:#b9690a;
+  --teal:#0f6e6a;
+  --teal-deep:#0a4f4c;
+  --good:#2f8f4e;
+  --warn:#c0392b;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+  --sans: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--sans);}
+
+/* === Header strip, evokes a drawing title block === */
+.titleblock{
+  display:flex;align-items:stretch;
+  background:var(--ink);
+  color:#fff;
+  border-bottom:4px solid var(--amber);
+}
+.titleblock .mark{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 22px;
+  border-right:1px solid rgba(255,255,255,.15);
+}
+.titleblock .mark .dot{
+  width:11px;height:11px;background:var(--amber);
+  transform:rotate(45deg);
+  flex:none;
+}
+.titleblock .mark b{
+  font-size:15px;letter-spacing:.14em;font-weight:800;
+}
+.titleblock .mark span{
+  display:block;font-size:9.5px;letter-spacing:.18em;color:#9fb0bd;margin-top:2px;
+}
+.titleblock .doc{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  font-size:11px;letter-spacing:.12em;color:#cdd8e0;
+  font-family:var(--mono);
+}
+.titleblock .meta{
+  display:flex;
+}
+.titleblock .meta div{
+  padding:14px 18px;border-left:1px solid rgba(255,255,255,.15);
+  font-family:var(--mono);font-size:10.5px;color:#9fb0bd;
+  display:flex;flex-direction:column;justify-content:center;gap:2px;
+}
+.titleblock .meta div b{color:#fff;font-size:12px;font-weight:600;}
+
+/* === layout === */
+.wrap{max-width:1500px;margin:0 auto;padding:22px 22px 60px;}
+.grid{display:grid;grid-template-columns:420px 1fr;gap:20px;align-items:start;}
+@media (max-width:1100px){.grid{grid-template-columns:1fr;}}
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:2px;
+  position:relative;
+}
+.panel-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 16px;
+  background:var(--ink);
+  color:#fff;
+}
+.panel-head h2{
+  margin:0;font-size:12px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;
+}
+.panel-head .tag{
+  font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.05em;
+}
+
+/* === Config form, looks like a spec sheet === */
+.spec{padding:0;}
+.row{
+  display:grid;grid-template-columns:34px 1fr;
+  border-bottom:1px solid var(--line);
+}
+.row:last-child{border-bottom:none;}
+.row .idx{
+  background:var(--paper);
+  border-right:1px solid var(--line);
+  display:flex;align-items:flex-start;justify-content:center;
+  padding-top:14px;
+  font-family:var(--mono);font-weight:700;color:var(--steel);font-size:12px;
+}
+.row .body{padding:11px 14px;}
+.row label{
+  display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--steel);font-weight:700;margin-bottom:7px;
+}
+.choices{display:flex;flex-wrap:wrap;gap:6px;}
+.choice-btn{
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+  padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer;
+  border-radius:2px;font-family:var(--sans);transition:.12s;
+}
+.choice-btn:hover{border-color:var(--amber);}
+.choice-btn.active{
+  background:var(--amber);border-color:var(--amber-deep);color:#fff;
+}
+.choice-btn.active.teal{background:var(--teal);border-color:var(--teal-deep);}
+.numfield{
+  display:flex;align-items:center;border:1px solid var(--line);border-radius:2px;overflow:hidden;width:fit-content;
+}
+.numfield button{
+  background:var(--paper);border:none;width:30px;height:32px;font-size:16px;cursor:pointer;color:var(--steel);
+}
+.numfield button:hover{background:var(--line);}
+.numfield input{
+  width:64px;text-align:center;border:none;border-left:1px solid var(--line);border-right:1px solid var(--line);
+  height:32px;font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink);
+}
+.numfield input:focus{outline:none;}
+.unit{font-family:var(--mono);font-size:10.5px;color:#8a98a6;margin-left:8px;}
+.na-note{
+  font-family:var(--mono);font-size:10.5px;color:#8a98a6;padding-top:4px;
+}
+
+.btnrow{display:flex;gap:10px;padding:16px;border-top:1px solid var(--line);background:var(--paper);}
+.action{
+  flex:1;padding:11px 10px;border:none;border-radius:2px;font-weight:700;font-size:12px;
+  letter-spacing:.06em;text-transform:uppercase;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.action.primary{background:var(--teal);color:#fff;}
+.action.primary:hover{background:var(--teal-deep);}
+.action.secondary{background:var(--ink);color:#fff;}
+.action.secondary:hover{background:#0b1118;}
+.action svg{width:14px;height:14px;}
+
+/* === Right panel: preview === */
+.preview{padding:18px;}
+.preview-stage{
+  background:linear-gradient(180deg,#eef1f4,#e3e8ec);
+  border:1px solid var(--line);
+  height:calc(100vh - 260px);
+  min-height:600px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.preview-stage svg{width:100%;height:100%;}
+.preview-caption{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 2px 0;font-family:var(--mono);font-size:10.5px;color:#8a98a6;
+}
+.preview-caption b{color:var(--ink);font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.04em;}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:18px;}
+.kpi{background:#fff;padding:12px 14px;}
+.kpi .v{font-family:var(--mono);font-size:20px;font-weight:800;color:var(--ink);}
+.kpi .l{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);margin-top:2px;}
+
+/* === BOM table === */
+.bom-wrap{margin-top:20px;}
+table.bom{
+  width:100%;border-collapse:collapse;background:#fff;
+}
+table.bom thead th{
+  background:var(--ink);color:#fff;text-align:left;
+  font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  padding:10px 12px;border-bottom:2px solid var(--amber);
+}
+table.bom thead th.num{text-align:center;}
+table.bom tbody td{
+  padding:9px 12px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top;
+}
+table.bom tbody tr:nth-child(even){background:#fafbfc;}
+table.bom tbody tr.na{opacity:.45;}
+table.bom td.code{font-family:var(--mono);font-weight:700;color:var(--teal-deep);white-space:nowrap;}
+table.bom td.drawing{font-family:var(--mono);font-size:11.5px;color:var(--steel);white-space:nowrap;}
+table.bom td.qty{font-family:var(--mono);font-weight:800;text-align:center;font-size:13.5px;}
+table.bom td.sr{font-family:var(--mono);color:#9aa6b1;text-align:center;}
+
+footer.note{
+  margin-top:18px;font-size:11px;color:#8a98a6;font-family:var(--mono);text-align:center;
+}
+
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;padding:12px 20px;border-radius:3px;
+  font-size:12.5px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;
+  border-left:4px solid var(--amber);
+  display:flex;align-items:center;gap:10px;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="titleblock">
+  <div class="mark"><div class="dot"></div><div><b>MOTION&nbsp;PLUS</b><span>WORKSTATION ENGINEERING</span></div></div>
+  <div class="doc">BOM CONFIGURATOR &nbsp;/&nbsp; DRIVEN BY MOTIONDRAWING MASTER &amp; LOOKUP TABLES</div>
+  <div class="meta">
+    <div>REV<b>TRIAL-01</b></div>
+    <div>SOURCE<b>BOM_DETAILS_MOTION_TABLE</b></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="grid">
+
+    <!-- CONFIG PANEL -->
+    <div class="panel">
+      <div class="panel-head"><h2>Configuration</h2><span class="tag">SHEET4</span></div>
+      <div class="spec">
+
+        <div class="row">
+          <div class="idx">A</div>
+          <div class="body">
+            <label>Select Workstation Type</label>
+            <div class="choices" id="wsTypeChoices"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">—</div>
+          <div class="body">
+            <label>Access Flap Location</label>
+            <div class="choices" id="accessFlapChoices"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">—</div>
+          <div class="body">
+            <label>Person Count</label>
+            <div class="choices" id="personChoices"></div>
+            <div class="na-note" id="personNote" style="display:none;">Not applicable for this workstation type</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">B</div>
+          <div class="body">
+            <label>Table Length</label>
+            <div class="choices" id="lengthChoices"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">C</div>
+          <div class="body">
+            <label>Table Depth</label>
+            <div class="choices" id="depthChoices"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">D</div>
+          <div class="body">
+            <label>Privacy Panel Height</label>
+            <div class="choices" id="heightChoices"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">—</div>
+          <div class="body">
+            <label>Privacy Panel</label>
+            <div class="choices" id="privacyChoices"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">—</div>
+          <div class="body">
+            <label>Clusters</label>
+            <div class="numfield">
+              <button type="button" id="clusterMinus">−</button>
+              <input type="text" id="clusterInput" value="10" inputmode="numeric">
+              <button type="button" id="clusterPlus">+</button>
+            </div>
+            <span class="unit">no. of repeating cluster units</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="btnrow">
+        <button class="action primary" id="viewModelBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          View 3D Model
+        </button>
+        <button class="action secondary" id="exportBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export BOM
+        </button>
+        <button class="action secondary" id="downloadDxfBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+          Shop Drawing
+        </button>
+      </div>
+    </div>
+
+    <!-- PREVIEW PANEL -->
+    <div class="panel">
+      <div class="panel-head"><h2 id="previewTitle">Motion Plus Workstation</h2><span class="tag" id="previewTag">WS_1</span></div>
+      <div class="preview">
+        <div class="preview-stage" id="stage"></div>
+        <div class="preview-caption">
+          <b id="captionType">—</b>
+          <span id="captionRef">drawing ref —</span>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="v" id="kpiPersons">—</div><div class="l">Persons</div></div>
+          <div class="kpi"><div class="v" id="kpiClusters">—</div><div class="l">Clusters</div></div>
+          <div class="kpi"><div class="v" id="kpiFootprint">—</div><div class="l">Top Size mm</div></div>
+          <div class="kpi"><div class="v" id="kpiLines">—</div><div class="l">BOM Lines</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOM TABLE -->
+  <div class="panel bom-wrap">
+    <div class="panel-head"><h2>Bill of Materials</h2><span class="tag" id="bomMeta">—</span></div>
+    <table class="bom">
+      <thead>
+        <tr>
+          <th class="num">Sr.</th>
+          <th>Product Code</th>
+          <th>Description</th>
+          <th>Drawing No.</th>
+          <th class="num">Qty</th>
+        </tr>
+      </thead>
+      <tbody id="bomBody"></tbody>
+    </table>
+  </div>
+
+  <footer class="note">FORMULA ENGINE REPLICATES SHEET4 CELL LOGIC — D20:F34 — AGAINST MOTIONDRAWING!B:E AND LOOKUP!A:E · ALL VALUES RECOMPUTE LIVE</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script id="motiondata" type="application/json">
+[{"code": "AAFSC450145", "desc": "ALUMINIUM ACCESS FLAP WITH SOFT CLOSE DIECASTED 450X145", "drawing": "SW-OF-LN-4045"}, {"code": "LPPPB6", "desc": "LINEO PRIVACY PANEL BRACKET 6MM", "drawing": "SW-OF-LN-0173"}, {"code": "MPBTB18FPPC0A5", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1200L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59521"}, {"code": "MPBTB18FPPC0C0", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1200L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59513"}, {"code": "MPBTB18FPPD5A5", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1350L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59521"}, {"code": "MPBTB18FPPD5C0", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1350L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59517"}, {"code": "MPBTB18FPPF0A5", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1500L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59525"}, {"code": "MPBTB18FPPF0C0", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1500L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59517"}, {"code": "MPBTB18FPPG5A5", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1650L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59525"}, {"code": "MPBTB18FPPG5C0", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1650L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59517"}, {"code": "MPBTB18FPPI0A5", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1800L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59525"}, {"code": "MPBTB18FPPI0C0", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1800L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59517"}, {"code": "MPBTB18TFPPC0A5", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1200L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59521"}, {"code": "MPBTB18TFPPC0C0", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1200L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59513"}, {"code": "MPBTB18TFPPD5A5", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1350L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59521"}, {"code": "MPBTB18TFPPD5C0", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1350L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59517"}, {"code": "MPBTB18TFPPF0A5", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1500L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59525"}, {"code": "MPBTB18TFPPF0C0", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1500L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59517"}, {"code": "MPBTB18TFPPG5A5", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1650L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59525"}, {"code": "MPBTB18TFPPG5C0", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1650L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59517"}, {"code": "MPBTB18TFPPI0A5", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1800L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59525"}, {"code": "MPBTB18TFPPI0C0", "desc": "MOTION PLUS BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1800L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59517"}, {"code": "MPBSCMJMBTB600D", "desc": "MOTION PLUS BOTTOM SUPPORT CROSS MEMBER FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @600D", "drawing": "SW-OF-GN-59536"}, {"code": "MPBSCMJMBTB700D", "desc": "MOTION PLUS BOTTOM SUPPORT CROSS MEMBER FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @700D", "drawing": "SW-OF-GN-59536"}, {"code": "MPBSCMJMBTB750D", "desc": "MOTION PLUS BOTTOM SUPPORT CROSS MEMBER FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @750D", "drawing": "SW-OF-GN-59536"}, {"code": "MPBSCMJMBTB800D", "desc": "MOTION PLUS BOTTOM SUPPORT CROSS MEMBER FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @800D", "drawing": "SW-OF-GN-59536"}, {"code": "MPCTCBTBSJ", "desc": "MOTION PLUS CABLE TRAY CONNECTOR FOR BACK TO BACK WORKSTATION SHARING JUNCTION", "drawing": "SW-OF-GN-57942"}, {"code": "MPCTBTB2PWS120", "desc": "MOTION PLUS CABLE TRAY FOR BACK TO BACK 2 P WORKSTATION 1200L", "drawing": "SW-OF-GN-59539"}, {"code": "MPCTBTB2PWS135", "desc": "MOTION PLUS CABLE TRAY FOR BACK TO BACK 2 P WORKSTATION 1350L", "drawing": "SW-OF-GN-59539"}, {"code": "MPCTBTB2PWS150", "desc": "MOTION PLUS CABLE TRAY FOR BACK TO BACK 2 P WORKSTATION 1500L", "drawing": "SW-OF-GN-59539"}, {"code": "MPCTBTB2PWS165", "desc": "MOTION PLUS CABLE TRAY FOR BACK TO BACK 2 P WORKSTATION 1650L", "drawing": "SW-OF-GN-59539"}, {"code": "MPCTBTB2PWS180", "desc": "MOTION PLUS CABLE TRAY FOR BACK TO BACK 2 P WORKSTATION 1800L", "drawing": "SW-OF-GN-59539"}, {"code": "MPFSJMOS60D", "desc": "MOTION PLUS FOOT (SET) FOR JIECANG MAKE ONE SIDED MOTION U/S @600D (FOR TOP DEPTH 600)", "drawing": "SW-OF-GN-57631"}, {"code": "MPFSJMOS70D", "desc": "MOTION PLUS FOOT (SET) FOR JIECANG MAKE ONE SIDED MOTION U/S @700D (FOR TOP DEPTH 700)", "drawing": "SW-OF-GN-57631"}, {"code": "MPFSJMOS75D", "desc": "MOTION PLUS FOOT (SET) FOR JIECANG MAKE ONE SIDED MOTION U/S @750D (FOR TOP DEPTH 750)", "drawing": "SW-OF-GN-57631"}, {"code": "MPFSJMOS80D", "desc": "MOTION PLUS FOOT (SET) FOR JIECANG MAKE ONE SIDED MOTION U/S @800D (FOR TOP DEPTH 800)", "drawing": "SW-OF-GN-57631"}, {"code": "MPFSTPPBCECRC060", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1200LX600D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRC070", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1200LX700D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRC075", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1200LX750D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRC080", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1200LX800D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRD560", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1350LX600D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRD570", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1350LX700D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRD575", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1350LX750D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRD580", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1350LX800D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRF060", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1500LX600D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRF070", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1500LX700D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRF075", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1500LX750D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRF080", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1500LX800D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRG560", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1650LX600D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRG570", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1650LX700D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRG575", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1650LX750D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRG580", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1650LX800D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRI060", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1800LX600D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRI070", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1800LX700D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRI075", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1800LX750D", "drawing": "SW-OF-GN-59281"}, {"code": "MPFSTPPBCECRI080", "desc": "MOTION PLUS FREE STANDING WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1800LX800D", "drawing": "SW-OF-GN-59281"}, {"code": "MPHCMJMBTB120L", "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @1200L", "drawing": "SW-OF-GN-56005"}, {"code": "MPHCMJMBTB135L", "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @1350L", "drawing": "SW-OF-GN-55204"}, {"code": "MPHCMJMBTB150L", "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @1500L", "drawing": "SW-OF-GN-55404"}, {"code": "MPHCMJMBTB165L", "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @1650L", "drawing": "SW-OF-GN-59287"}, {"code": "MPHCMJMBTB180L", "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @1800L", "drawing": "SW-OF-GN-58314"}, {"code": "MPHCMJMOS120L", "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE FREE STANDING WORKSTATION U/S @1200L", "drawing": "SW-OF-GN-56005"}, {"code": "MPHCMJMOS135L", "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE FREE STANDING WORKSTATION U/S @1350L", "drawing": "SW-OF-GN-55204"}, {"code": "MPHCMJMOS150L", "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE FREE STANDING WORKSTATION U/S @1500L", "drawing": "SW-OF-GN-55404"}, {"code": "MPHCMJMOS165L", "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE FREE STANDING WORKSTATION U/S @1650L", "drawing": "SW-OF-GN-59287"}, {"code": "MPHCMJMOS180L", "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE FREE STANDING WORKSTATION U/S @1800L", "drawing": "SW-OF-GN-58314"}, {"code": "MPOS18FPPC075A5", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1200L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59504"}, {"code": "MPOS18TFPPC075A5", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1200L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59504"}, {"code": "MPOS18FPPC075C0", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1200L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59290"}, {"code": "MPOS18TFPPC075C0", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1200L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59290"}, {"code": "MPOS18FPPD575A5", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1350L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59504"}, {"code": "MPOS18TFPPD575A5", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1350L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59504"}, {"code": "MPOS18FPPD575C0", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1350L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59290"}, {"code": "MPOS18TFPPD575C0", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1350L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59290"}, {"code": "MPOS18FPPF075A5", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1500L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59510"}, {"code": "MPOS18TFPPF075A5", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1500L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59510"}, {"code": "MPOS18FPPF075C0", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1500L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59501"}, {"code": "MPOS18TFPPF075C0", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1500L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59501"}, {"code": "MPOS18FPPG575A5", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1650L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59510"}, {"code": "MPOS18TFPPG575A5", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1650L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59510"}, {"code": "MPOS18FPPG575C0", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1650L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59501"}, {"code": "MPOS18TFPPG575C0", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1650L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59501"}, {"code": "MPOS18FPPI075A5", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1800L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59510"}, {"code": "MPOS18TFPPI075A5", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1800L TOP (WS 1050HT)", "drawing": "SW-OF-GN-59510"}, {"code": "MPOS18FPPI075C0", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1800L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59501"}, {"code": "MPOS18TFPPI075C0", "desc": "MOTION PLUS FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1800L TOP (WS 1200HT)", "drawing": "SW-OF-GN-59501"}, {"code": "MPSHBLHS", "desc": "MOTION PLUS SCREEN HOLDING BKTS LHS", "drawing": "SW-OF-GN-57396"}, {"code": "MPSHBRHS", "desc": "MOTION PLUS SCREEN HOLDING BKTS RHS", "drawing": "SW-OF-GN-57396"}, {"code": "MPTSBJMBTB600D", "desc": "MOTION PLUS TOP SUPPORT BRACKET FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @600D", "drawing": "SW-OF-GN-55401"}, {"code": "MPTSBJMBTB700D", "desc": "MOTION PLUS TOP SUPPORT BRACKET FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @700D", "drawing": "SW-OF-GN-54920"}, {"code": "MPTSBJMBTB750D", "desc": "MOTION PLUS TOP SUPPORT BRACKET FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @750D", "drawing": "SW-OF-GN-54920"}, {"code": "MPTSBJMBTB800D", "desc": "MOTION PLUS TOP SUPPORT BRACKET FOR JIECANG MAKE BACK TO BACK WORKSTATION U/S @800D", "drawing": "SW-OF-GN-55906"}, {"code": "MPTSBJMOS600D", "desc": "MOTION PLUS TOP SUPPORT BRACKET FOR JIECANG MAKE FREE STANDING WORKSTATION U/S @600D", "drawing": "SW-OF-GN-55401"}, {"code": "MPTSBJMOS700D", "desc": "MOTION PLUS TOP SUPPORT BRACKET FOR JIECANG MAKE FREE STANDING WORKSTATION U/S @700D", "drawing": "SW-OF-GN-54920"}, {"code": "MPTSBJMOS750D", "desc": "MOTION PLUS TOP SUPPORT BRACKET FOR JIECANG MAKE FREE STANDING WORKSTATION U/S @750D", "drawing": "SW-OF-GN-54920"}, {"code": "MPTSBJMOS800D", "desc": "MOTION PLUS TOP SUPPORT BRACKET FOR JIECANG MAKE FREE STANDING WORKSTATION U/S @800D", "drawing": "SW-OF-GN-55906"}, {"code": "MPU2M3SLBSWJM", "desc": "MOTION PLUS U/S 3 STAGE 2 MOTOR BACK TO BACK STR WS - HT. ADJ U/S(JC35TF-R13S)(NEW TYPE)JIECANG MAKE", "drawing": "VENDOR"}, {"code": "MPU2M3SLOFJM", "desc": "MOTION PLUS U/S RECTANGULAR 3 STAGE 2 MOTOR FOR LINEAR ONE SIDED(JC35TF-R13S) JIECANG MAKE", "drawing": "VENDOR"}, {"code": "MPVFTSMB", "desc": "MOTION PLUS VERTIBRE ( FLOOR TO SWITCH MOUNTING BOX) (BOOKING QTY-2 NO.S)", "drawing": "VENDOR"}, {"code": "MPWTPPBCECRC060", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1200LX600D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRC070", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1200LX700D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRC075", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1200LX750D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRC080", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1200LX800D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRD560", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1350LX600D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRD570", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1350LX700D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRD575", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1350LX750D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRD580", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1350LX800D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRF060", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1500LX600D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRF070", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1500LX700D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRF075", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1500LX750D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRF080", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1500LX800D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRG560", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1650LX600D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRG570", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1650LX700D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRG575", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1650LX750D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRG580", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1650LX800D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRI060", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1800LX600D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRI070", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1800LX700D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRI075", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1800LX750D", "drawing": "SW-OF-GN-59281"}, {"code": "MPWTPPBCECRI080", "desc": "MOTION PLUS BACK TO BACK WORKSTATION STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1800LX800D", "drawing": "SW-OF-GN-59281"}, {"code": "MPVDPWCDSWS", "desc": "SPL MOTION PLUS VERTICAL DUCT PWCD FOR SHARING WS", "drawing": "SW-OF-GN-57359"}, {"code": "SMBC450", "desc": "SWITCH MOUNTING BOX CABIN+CONF TBL 450LX212DX125H", "drawing": "SW-OF-SD-08738"}, {"code": "SMBSP450", "desc": "SWITCH MOUNTING BOX SWITCH PLATE 450LX168D", "drawing": "SW-OF-SD-08737"}]
+</script>
+
+<script>
+/* ===================== DATA ===================== */
+const MOTIONDRAWING = JSON.parse(document.getElementById('motiondata').textContent);
+
+/* ---------------------------------------------------------------
+   ASSET WIRING
+   Drop your real files next to this HTML file in these folders:
+     ./Images/    — PDF previews,   named by base image key + suffix + .pdf
+     ./Models/    — HTML 3D models, named by base image key + suffix + .html
+     ./Drawings/  — DXF shop drawings, named by base image key + suffix + .dxf
+
+   PDFs, models AND shop drawings all share the SAME base name from the
+   LOOKUP table (the "image" field, e.g. WS_1, WS_2 …).  Suffix variants
+   are built automatically from the current Access Flap + Privacy Panel
+   state. Only add the files you actually have — missing variants are
+   skipped and the app falls back gracefully to the next candidate.
+
+   Suffix build order (most-specific first), shown for .pdf but identical
+   for .html and .dxf:
+     WS_3_LHS_NOPRIV.pdf      flap=LHS,    privacy=NO
+     WS_3_LHS.pdf             flap=LHS,    privacy=YES
+     WS_3_RHS_NOPRIV.pdf      flap=RHS,    privacy=NO
+     WS_3_RHS.pdf             flap=RHS,    privacy=YES
+     WS_3_CENTRE_NOPRIV.pdf   flap=CENTRE, privacy=NO
+     WS_3_CENTRE.pdf          flap=CENTRE, privacy=YES
+     WS_3_NOFLAP_NOPRIV.pdf   flap=NO,     privacy=NO
+     WS_3_NOFLAP.pdf          flap=NO,     privacy=YES
+     WS_3_NOPRIV.pdf          flap=any,    privacy=NO  (generic fallback)
+     WS_3.pdf                 base fallback (always last)
+------------------------------------------------------------------*/
+const IMAGE_DIR   = './Images/';
+const MODEL_DIR   = './Models/';
+const DRAWING_DIR = './Drawings/';
+const IMAGE_EXT   = '.pdf';
+const MODEL_EXT   = '.html';
+const DRAWING_EXT = '.dxf';
+
+function lookupByDesc(desc){
+  if(desc === null || desc === undefined) return {code:'--', drawing:'--'};
+  const hit = MOTIONDRAWING.find(r => r.desc === desc);
+  return hit ? {code:hit.code, drawing:hit.drawing} : {code:'--', drawing:'--'};
+}
+
+/* Lookup sheet, mirrors the Lookup tab */
+const LOOKUP = [
+  {type:'FREE STANDING WORKSTATION', option:'YES', flap:'CENTRE', image:'WS_1'},
+  {type:'BACK TO BACK WORKSTATION',  option:2,     flap:'CENTRE', image:'WS_2'},
+  {type:'BACK TO BACK WORKSTATION',  option:4,     flap:'CENTRE', image:'WS_3'},
+  {type:'BACK TO BACK WORKSTATION',  option:6,     flap:'CENTRE', image:'WS_4'},
+  {type:'BACK TO BACK WORKSTATION',  option:8,     flap:'CENTRE', image:'WS_5'},
+  {type:'BACK TO BACK WORKSTATION',  option:10,    flap:'CENTRE', image:'WS_6'},
+];
+
+/* ===================== STATE (mirrors Sheet4 inputs) ===================== */
+const state = {
+  wsType: 'BACK TO BACK WORKSTATION',  // D4
+  accessFlap: 'CENTRE',                // E4
+  person: 2,                           // F4
+  length: 1500,                        // D6
+  depth: 750,                          // D8
+  height: 1050,                        // D10  (1050 or 1200)
+  privacy: 'YES',                      // E10
+  clusters: 1,                         // F10
+};
+
+const OPTIONS = {
+  wsType: ['BACK TO BACK WORKSTATION', 'FREE STANDING WORKSTATION'],
+  accessFlap:    ['LHS', 'RHS', 'CENTRE', 'NO'],  // Free Standing: all 4
+  accessFlapBTB: ['LHS', 'RHS', 'CENTRE'],         // Back to Back: NO is not offered
+  person: [2, 4, 6, 8, 10],
+  length: [1200, 1350, 1500, 1650, 1800],
+  depth: [600, 700, 750, 800],
+  height: [1050, 1200],
+  privacy: ['YES', 'NO'],
+};
+
+const isFS = () => state.wsType.toLowerCase() === 'free standing workstation';
+
+/* substitute "WITH" -> "" and collapse double spaces, like SUBSTITUTE(D4,"WITH","") */
+function subWS(){
+  return state.wsType.replace(/WITH/g, '').replace(/\s+/g,' ').trim();
+}
+
+/* ===================== FORMULA ENGINE (Sheet4 rows 20-34) ===================== */
+function buildBOM(){
+  const fs = isFS();
+  const flapNo = state.accessFlap.toLowerCase() === 'no';
+  const privNo = state.privacy.toLowerCase() === 'no';
+  const personIs2 = String(state.person) === '2';
+
+  const rows = [];
+
+  // Row 20 — actuator
+  {
+    const desc = fs
+      ? 'MOTION PLUS U/S RECTANGULAR 3 STAGE 2 MOTOR FOR LINEAR ONE SIDED(JC35TF-R13S) JIECANG MAKE'
+      : 'MOTION PLUS U/S 3 STAGE 2 MOTOR BACK TO BACK STR WS - HT. ADJ U/S(JC35TF-R13S)(NEW TYPE)JIECANG MAKE';
+    const qty = fs ? state.clusters*1 : (state.person/2)*state.clusters;
+    rows.push(mk(desc, qty));
+  }
+
+  // Row 21 — table top
+  {
+    const desc = `MOTION PLUS ${subWS()} STR TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD ${state.length}LX${state.depth}D`;
+    const qty = fs ? rows[0].qtyRaw : state.person*state.clusters;
+    rows.push(mk(desc, qty));
+  }
+
+  // Row 22 — horizontal cross member
+  {
+    const desc = `MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE ${subWS()} U/S @${state.length}L`;
+    const qty = fs ? rows[0].qtyRaw : state.person*state.clusters;
+    rows.push(mk(desc, qty));
+  }
+
+  // Row 23 — top support bracket
+  {
+    const desc = `MOTION PLUS TOP SUPPORT BRACKET FOR JIECANG MAKE ${subWS()} U/S @${state.depth}D`;
+    const qty = fs ? rows[0].qtyRaw*2 : (state.person*2)*state.clusters;
+    rows.push(mk(desc, qty));
+  }
+
+  // Row 24 — bottom support cross member (BTB only)
+  {
+    const desc = fs ? 'Not Applicable' : `MOTION PLUS BOTTOM SUPPORT CROSS MEMBER FOR JIECANG MAKE ${subWS()} U/S @${state.depth}D`;
+    const qty = fs ? null : (state.person)*state.clusters;
+    rows.push(mk(desc, qty, fs));
+  }
+
+  // Row 25 — access flap
+  {
+    const desc = flapNo ? 'Not Applicable' : 'ALUMINIUM ACCESS FLAP WITH SOFT CLOSE DIECASTED 450X145';
+    const qty = flapNo ? null : (fs ? rows[0].qtyRaw : state.person*state.clusters);
+    rows.push(mk(desc, qty, flapNo));
+  }
+  // Row 26 — switch mounting box (cabin)
+  {
+    const desc = flapNo ? 'Not Applicable' : 'SWITCH MOUNTING BOX CABIN+CONF TBL 450LX212DX125H';
+    const qty = flapNo ? null : (fs ? rows[0].qtyRaw : state.person*state.clusters);
+    rows.push(mk(desc, qty, flapNo));
+  }
+  // Row 27 — switch mounting box (plate)
+  {
+    const desc = flapNo ? 'Not Applicable' : 'SWITCH MOUNTING BOX SWITCH PLATE 450LX168D';
+    const qty = flapNo ? null : (fs ? rows[0].qtyRaw : state.person*state.clusters);
+    rows.push(mk(desc, qty, flapNo));
+  }
+  // Row 28 — vertibre
+  {
+    const desc = flapNo ? 'Not Applicable' : 'MOTION PLUS VERTIBRE ( FLOOR TO SWITCH MOUNTING BOX) (BOOKING QTY-2 NO.S)';
+    const qty = flapNo ? null : (fs ? rows[0].qtyRaw : state.person*state.clusters);
+    rows.push(mk(desc, qty, flapNo));
+  }
+
+  // Row 29 — cable tray (BTB only)
+  {
+    const desc = fs ? 'Not Applicable' : `MOTION PLUS CABLE TRAY FOR BACK TO BACK 2 P WORKSTATION ${state.length}L`;
+    const qty = fs ? null : (state.person/2)*state.clusters;
+    rows.push(mk(desc, qty, fs));
+  }
+  // Row 30 — cable tray connector
+  {
+    const naMath = fs || personIs2;
+    const desc = fs ? 'Not Applicable' : (personIs2 ? 'Not Applicable' : `MOTION PLUS CABLE TRAY CONNECTOR FOR ${subWS()} SHARING JUNCTION`);
+    const qty = naMath ? null : ((state.person/2)-1)*state.clusters;
+    rows.push(mk(desc, qty, naMath));
+  }
+  // Row 31 — vertical duct
+  // Needed for ALL BTB configs (including 2-person), not just those with a cable tray connector.
+  // For 2-person BTB: qty mirrors the cable tray (row29 = rows[9]), since there is no connector.
+  // For 4-person+ BTB: qty mirrors the cable tray connector (row30 = rows[10]).
+  {
+    const naMath = fs; // N/A only for Free Standing; always visible for any BTB
+    const desc = fs ? 'Not Applicable' : 'SPL MOTION PLUS VERTICAL DUCT PWCD FOR SHARING WS';
+    const qty = fs ? null : (personIs2 ? rows[9].qtyRaw : rows[10].qtyRaw);
+    rows.push(mk(desc, qty, naMath));
+  }
+
+  // Row 32 — privacy panel
+  let row32qty = null;
+  {
+    const desc = privNo ? 'Not Applicable' : `MOTION PLUS ${subWS()} 18MM THK MAGNETIC FAB PRIVACY PNL FOR ${state.length}L TOP (WS ${state.height}HT)`;
+    const qty = privNo ? null : (fs ? state.clusters*1 : (state.person/2)*state.clusters);
+    row32qty = qty;
+    rows.push(mk(desc, qty, privNo));
+  }
+  // Row 33 — screen bracket LHS / lineo bracket
+  {
+    let desc, qty;
+    if(privNo){ desc = 'Not Applicable'; qty = null; }
+    else if(fs){
+      desc = 'LINEO PRIVACY PANEL BRACKET 6MM';
+      if(state.length===1200 || state.length===1350) qty = state.clusters*3;
+      else if(state.length===1500 || state.length===1650) qty = state.clusters*4;
+      else if(state.length===1800) qty = state.clusters*4;
+      else qty = row32qty*2;
+    } else {
+      desc = 'MOTION PLUS SCREEN HOLDING BKTS LHS';
+      qty = row32qty*2;
+    }
+    rows.push(mk(desc, qty, privNo));
+  }
+  // Row 34 — screen bracket RHS (BTB only)
+  {
+    let desc, qty;
+    if(privNo){ desc='Not Applicable'; qty=null; }
+    else if(fs){ desc='Not Applicable'; qty=null; }
+    else { desc='MOTION PLUS SCREEN HOLDING BKTS RHS'; qty = rows[13].qtyRaw; } // row33 (LHS) is rows[13]
+    rows.push(mk(desc, qty, fs || privNo));
+  }
+
+  return rows;
+}
+
+function mk(desc, qty, na){
+  const isNA = na || desc === 'Not Applicable' || qty === null;
+  const lk = isNA ? {code:'--', drawing:'--'} : lookupByDesc(desc);
+  return {
+    desc,
+    code: isNA ? '--' : lk.code,
+    drawing: isNA ? '--' : lk.drawing,
+    qty: isNA ? '--' : Math.round(qty),
+    qtyRaw: qty,
+    na: isNA,
+  };
+}
+
+/* ===================== UI BUILD ===================== */
+function choiceButtons(containerId, options, currentKey, fmt){
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  options.forEach(opt => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'choice-btn';
+    b.textContent = fmt ? fmt(opt) : opt;
+    if(String(state[currentKey]) === String(opt)) b.classList.add('active');
+    b.addEventListener('click', () => {
+      state[currentKey] = opt;
+      render();
+    });
+    el.appendChild(b);
+  });
+}
+
+function render(){
+  const fs = isFS();
+
+  choiceButtons('wsTypeChoices', OPTIONS.wsType, 'wsType', v => v.replace(/ WORKSTATION$/,''));
+  // BTB does not offer 'NO' as a flap location — auto-correct state if needed
+  if(!fs && state.accessFlap.toUpperCase() === 'NO') state.accessFlap = 'CENTRE';
+  const flapOpts = fs ? OPTIONS.accessFlap : OPTIONS.accessFlapBTB;
+  choiceButtons('accessFlapChoices', flapOpts, 'accessFlap');
+  choiceButtons('privacyChoices', OPTIONS.privacy, 'privacy');
+  choiceButtons('lengthChoices', OPTIONS.length, 'length', v => v+'mm');
+  choiceButtons('depthChoices', OPTIONS.depth, 'depth', v => v+'mm');
+  choiceButtons('heightChoices', OPTIONS.height, 'height', v => v+'mm');
+
+  const personWrap = document.getElementById('personChoices');
+  const personNote = document.getElementById('personNote');
+  if(fs){
+    personWrap.style.display = 'none';
+    personNote.style.display = 'block';
+  } else {
+    personWrap.style.display = 'flex';
+    personNote.style.display = 'none';
+    choiceButtons('personChoices', OPTIONS.person, 'person', v => v+' P');
+  }
+
+  document.getElementById('clusterInput').value = state.clusters;
+
+  const rows = buildBOM();
+  const tbody = document.getElementById('bomBody');
+  tbody.innerHTML = '';
+  rows.forEach((r,i) => {
+    const tr = document.createElement('tr');
+    if(r.na) tr.className = 'na';
+    tr.innerHTML = `
+      <td class="sr">${i+1}</td>
+      <td class="code">${r.code}</td>
+      <td>${r.desc}</td>
+      <td class="drawing">${r.drawing}</td>
+      <td class="qty">${r.qty}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('bomMeta').textContent = `${rows.filter(r=>!r.na).length} ACTIVE / ${rows.length} LINES`;
+
+  // KPIs
+  document.getElementById('kpiPersons').textContent = fs ? 'N/A' : state.person;
+  document.getElementById('kpiClusters').textContent = state.clusters;
+  document.getElementById('kpiFootprint').textContent = `${state.length}×${state.depth}`;
+  document.getElementById('kpiLines').textContent = rows.filter(r=>!r.na).length;
+
+  // Lookup record + preview
+  const lk = fs
+    ? LOOKUP.find(l => l.type.toLowerCase()==='free standing workstation')
+    : LOOKUP.find(l => l.type.toLowerCase()==='back to back workstation' && Number(l.option)===Number(state.person));
+  document.getElementById('previewTag').textContent = lk ? lk.image : '—';
+  document.getElementById('previewTitle').textContent = `MOTION PLUS ${state.wsType}`;
+  document.getElementById('captionType').textContent = `${fs ? 'Free Standing' : state.person+'-Person Back to Back'} · ${state.length}×${state.depth} · HT ${state.height}`;
+  document.getElementById('captionRef').textContent = `model file: ${lk ? lk.image + MODEL_EXT : '—'}`;
+
+  drawStage(fs, state.person, state.clusters, lk);
+}
+
+/* ---------------------------------------------------------------
+   CANDIDATE BUILDER — shared suffix logic for both PDFs and models.
+
+   Given base name "WS_3", flap=LHS, privacy=NO, the order tried is:
+     WS_3_LHS_NOPRIV  →  WS_3_LHS  →  WS_3_NOPRIV  →  WS_3
+   Only files that actually exist are opened; everything else is skipped.
+----------------------------------------------------------------*/
+function buildVariants(base){
+  const flap    = state.accessFlap.toUpperCase(); // LHS | RHS | CENTRE | NO
+  const flapOff = flap === 'NO';
+  const privOff = state.privacy.toLowerCase() === 'no';
+  const variants = [];
+
+  if(!flapOff){
+    // Specific flap location variants (most-specific first)
+    if(privOff) variants.push(`${base}_${flap}_NOPRIV`);
+    variants.push(`${base}_${flap}`);
+  } else {
+    // Flap = NO variants
+    if(privOff) variants.push(`${base}_NOFLAP_NOPRIV`);
+    variants.push(`${base}_NOFLAP`);
+  }
+
+  // Generic privacy-off fallback (covers any flap location)
+  if(privOff) variants.push(`${base}_NOPRIV`);
+
+  variants.push(base); // base is always the final fallback
+  return variants;
+}
+
+function buildImageCandidates(lk){
+  if(!lk) return [];
+  return buildVariants(lk.image).map(n => `${IMAGE_DIR}${n}${IMAGE_EXT}`);
+}
+
+function buildModelCandidates(lk){
+  if(!lk) return [];
+  return buildVariants(lk.image).map(n => `${MODEL_DIR}${n}${MODEL_EXT}`);
+}
+
+function buildDrawingCandidates(lk){
+  if(!lk) return [];
+  return buildVariants(lk.image).map(n => `${DRAWING_DIR}${n}${DRAWING_EXT}`);
+}
+
+function loadPreviewImage(lk, onSuccess, onFail){
+  const candidates = buildImageCandidates(lk);
+  if(candidates.length === 0){ onFail(); return; }
+
+  let i = 0;
+  function tryNext(){
+    if(i >= candidates.length){ onFail(); return; }
+    const src = candidates[i++];
+    fetch(src, {method:'HEAD'})
+      .then(res => { if(res.ok){ onSuccess(src); } else { tryNext(); } })
+      .catch(() => {
+        // file:// protocol blocks HEAD requests; assume file present and let embed handle it
+        onSuccess(src);
+      });
+  }
+  tryNext();
+}
+
+/* ===================== STAGE ILLUSTRATION ===================== */
+function drawStage(fs, person, clusters, lk){
+  const stage = document.getElementById('stage');
+
+  loadPreviewImage(lk,
+    (src) => {
+      stage.innerHTML = `<embed src="${src}" type="application/pdf" style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;" title="${lk ? lk.image : 'preview'}">`;
+    },
+    () => {
+      drawProceduralStage(stage, fs, person, clusters);
+    }
+  );
+}
+
+function drawProceduralStage(stage, fs, person, clusters){
+  const n = fs ? 1 : Math.max(2, Math.min(6, person));
+  const w = 640, h = 420;
+  let tops = '';
+  const topW = 130, topH = 56, gapY = fs ? 0 : 14;
+  const startX = w/2 - topW/2;
+  const colCount = fs ? 1 : 2;
+  const rowCount = fs ? 1 : Math.ceil(n/2);
+  const totalH = rowCount*topH + (rowCount-1)*gapY;
+  let startY = h/2 - totalH/2;
+
+  for(let r=0;r<rowCount;r++){
+    for(let c=0;c<colCount;c++){
+      const idx = r*colCount + c;
+      if(idx >= n) continue;
+      const x = c===0 ? startX-110 : startX+110;
+      const y = startY + r*(topH+gapY);
+      const skewX = c===0 ? 18 : -18;
+      tops += `
+        <g transform="translate(${x},${y})">
+          <rect x="0" y="0" width="${topW}" height="${topH}" rx="3" fill="#caa06a" stroke="#8a6a3e" stroke-width="2"/>
+          <rect x="0" y="0" width="${topW}" height="10" fill="#dcb784" opacity=".6"/>
+          <rect x="${topW/2-3}" y="${topH}" width="6" height="34" fill="#6b7680"/>
+          <rect x="6" y="${topH+30}" width="${topW-12}" height="8" rx="2" fill="#3a4a5c"/>
+        </g>`;
+    }
+    if(!fs){
+      tops += `<rect x="${startX-4}" y="${startY+r*(topH+gapY)-4}" width="${topW+8}" height="${topH+8}" fill="none" stroke="#0f6e6a" stroke-width="1.5" stroke-dasharray="3 3" opacity=".35"/>`;
+    }
+  }
+  // central spine for BTB
+  let spine = '';
+  if(!fs){
+    spine = `<rect x="${w/2-6}" y="${startY-10}" width="12" height="${totalH+20}" fill="#1b2430" opacity=".15"/>`;
+  }
+
+  stage.innerHTML = `
+    <svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+          <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#d8dee4" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <rect width="${w}" height="${h}" fill="url(#grid)"/>
+      ${spine}
+      ${tops}
+      <text x="16" y="${h-16}" font-family="JetBrains Mono, monospace" font-size="11" fill="#8a98a6">
+        ${fs ? 'FREE STANDING — 1 UNIT' : person+'-PERSON BACK TO BACK — '+clusters+' CLUSTER(S)'}
+      </text>
+    </svg>
+  `;
+}
+
+/* ===================== EVENTS ===================== */
+document.getElementById('clusterMinus').addEventListener('click', () => {
+  state.clusters = Math.max(1, state.clusters - 1);
+  render();
+});
+document.getElementById('clusterPlus').addEventListener('click', () => {
+  state.clusters = state.clusters + 1;
+  render();
+});
+document.getElementById('clusterInput').addEventListener('change', (e) => {
+  const v = parseInt(e.target.value, 10);
+  state.clusters = isNaN(v) || v < 1 ? 1 : v;
+  render();
+});
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+document.getElementById('viewModelBtn').addEventListener('click', () => {
+  const fs = isFS();
+  const lk = fs
+    ? LOOKUP.find(l => l.type.toLowerCase()==='free standing workstation')
+    : LOOKUP.find(l => l.type.toLowerCase()==='back to back workstation' && Number(l.option)===Number(state.person));
+
+  if(!lk){ showToast('No model mapped for this configuration'); return; }
+
+  const candidates = buildModelCandidates(lk);
+  if(candidates.length === 0){ showToast('No model mapped for this configuration'); return; }
+
+  const primaryModelName = candidates[0].split('/').pop();
+
+  let i = 0;
+  function tryNextModel(){
+    if(i >= candidates.length){
+      showToast(`Model file not found: ${primaryModelName}`);
+      console.warn('Model lookup failed. Tried:', candidates);
+      return;
+    }
+    const url = candidates[i++];
+    fetch(url, {method:'HEAD'})
+      .then(res => {
+        if(res.ok){ window.open(url, '_blank'); }
+        else { tryNextModel(); }
+      })
+      .catch(() => {
+        // file:// protocol blocks HEAD — open the most-specific candidate directly
+        window.open(candidates[0], '_blank');
+      });
+  }
+  tryNextModel();
+});
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const rows = buildBOM().filter(r => !r.na);
+
+  const aoa = [['Sr.', 'Product Code', 'Description', 'Drawing No.', 'Qty']];
+  rows.forEach((r, i) => aoa.push([i + 1, r.code, r.desc, r.drawing, r.qty]));
+
+  const wsSheet = XLSX.utils.aoa_to_sheet(aoa);
+  wsSheet['!cols'] = [{wch:6}, {wch:20}, {wch:75}, {wch:16}, {wch:8}];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, wsSheet, 'BOM');
+
+  const fname = `BOM_${state.wsType.replace(/\s+/g,'_')}_${state.length}x${state.depth}.xlsx`;
+  XLSX.writeFile(wb, fname);
+
+  showToast('BOM exported as XLSX');
+});
+
+/* init */
+render();
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHOP DRAWING (DXF) — direct download from ./Drawings/, no modification
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Shop drawings live as real .dxf files in a ./Drawings/ folder next to
+   this HTML, using the SAME base name + suffix convention as the
+   ./Images/ (.pdf) and ./Models/ (.html) folders. Candidates are built
+   from the current LOOKUP record's "image" key (e.g. WS_1, WS_2 …) via
+   buildDrawingCandidates(), most-specific first (e.g. WS_5_CENTRE.dxf).
+
+   This site is served over https:// (GitHub Pages), so a normal fetch()
+   + Blob download works correctly and reliably — no file:// workarounds
+   needed. The file is downloaded exactly as committed to the repo, no
+   text rewriting, no dimension substitution.
+*/
+
+document.getElementById('downloadDxfBtn').addEventListener('click', () => {
+  const fs = isFS();
+  const lk = fs
+    ? LOOKUP.find(l => l.type.toLowerCase()==='free standing workstation')
+    : LOOKUP.find(l => l.type.toLowerCase()==='back to back workstation' && Number(l.option)===Number(state.person));
+
+  if(!lk){ showToast('No shop drawing mapped for this configuration'); return; }
+
+  const candidates = buildDrawingCandidates(lk);
+  if(candidates.length === 0){ showToast('No shop drawing mapped for this configuration'); return; }
+
+  // Most-specific candidate, e.g. "./Drawings/WS_2_CENTRE.dxf"
+  const url      = candidates[0];
+  const filename = url.split('/').pop();
+
+  showToast('Preparing shop drawing…');
+
+  fetch(url)
+    .then(res => {
+      if(!res.ok) throw new Error('not found');
+      return res.blob();
+    })
+    .then(blob => {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 5000);
+      showToast(`Downloaded ${filename}`);
+    })
+    .catch(() => {
+      showToast(`Shop drawing not found: ${filename}`);
+    });
+});
+
+</script>
+
+</body>
+</html>
+

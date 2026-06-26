@@ -255,8 +255,9 @@ footer.note{
         <div class="row">
           <div class="idx">D</div>
           <div class="body">
-            <label>Privacy Panel Height (From Ground)</label>
+            <label>Privacy Panel Height (From Floor)</label>
             <div class="choices" id="heightChoices"></div>
+            <div id="heightNote" style="font-size:10.5px;color:#8a98a6;margin-top:4px;font-family:var(--sans);"></div>
           </div>
         </div>
 
@@ -312,6 +313,20 @@ footer.note{
         <div class="preview-caption">
           <b id="captionType">—</b>
           <span id="captionRef">drawing ref —</span>
+        </div>
+
+        <!-- CONFIG CODE + LP BAND -->
+        <div style="display:grid;grid-template-columns:1fr auto;align-items:stretch;border:1px solid var(--line);margin-bottom:14px;border-radius:2px;overflow:hidden;">
+          <div style="padding:10px 14px;background:var(--paper);border-right:1px solid var(--line);">
+            <div style="font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);font-weight:700;margin-bottom:4px;">Configuration Code</div>
+            <div id="configCode" style="font-family:var(--mono);font-size:13px;font-weight:800;color:var(--teal-deep);letter-spacing:.06em;">—</div>
+            <div id="configLabel" style="font-size:10.5px;color:#8a98a6;margin-top:3px;font-family:var(--sans);">—</div>
+          </div>
+          <div style="padding:10px 18px;background:var(--ink);text-align:right;min-width:110px;display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#9fb0bd;font-weight:700;margin-bottom:4px;">Total List Price</div>
+            <div id="configLP" style="font-family:var(--mono);font-size:15px;font-weight:800;color:var(--amber);">—</div>
+            <div id="configLPUnit" style="font-family:var(--mono);font-size:9.5px;color:#7d8da0;margin-top:2px;">—</div>
+          </div>
         </div>
 
         <div class="kpis">
@@ -410,8 +425,8 @@ const state = {
   wsType: 'BACK TO BACK WORKSTATION',  // D4
   accessFlap: 'CENTRE',                // E4
   person: 2,                           // F4
-  length: 1500,                        // D6
-  depth: 750,                          // D8
+  length: 1200,                        // D6
+  depth: 600,                          // D8
   height: 1050,                        // D10  (1050 or 1200)
   privacy: 'YES',                      // E10
   panelType: 'MAGNETIC FAB',           // panel material type
@@ -425,7 +440,8 @@ const OPTIONS = {
   person: [2, 4, 6, 8, 10],
   length: [1200, 1350, 1500, 1650, 1800],
   depth: [600, 700, 750, 800],
-  height: [1050, 1200],
+  height:    [1050, 1200],       // shown for: BTB always, and FST when Privacy = Yes
+                                  // FST + Privacy = No instead shows only [750] (computed in render())
   privacy: ['YES', 'NO'],
   panelType: ['MAGNETIC FAB', 'FAB'],
 };
@@ -476,11 +492,13 @@ function buildBOM(){
     rows.push(mk(desc, qty));
   }
 
-  // Row 24 — bottom support cross member (BTB only)
+  // Row 24 — BTB: bottom support cross member · FST: Motion Table Foot (varies by depth)
   {
-    const desc = fs ? 'Not Applicable' : `MOTION PLUS BOTTOM SUPPORT CROSS MEMBER FOR JIECANG MAKE ${subWS()} U/S @${state.depth}D`;
-    const qty = fs ? null : (state.person)*state.clusters;
-    rows.push(mk(desc, qty, fs));
+    const desc = fs
+      ? `MOTION PLUS FOOT (SET) FOR JIECANG MAKE ONE SIDED MOTION U/S @${state.depth}D (FOR TOP DEPTH ${state.depth})`
+      : `MOTION PLUS BOTTOM SUPPORT CROSS MEMBER FOR JIECANG MAKE ${subWS()} U/S @${state.depth}D`;
+    const qty = fs ? rows[0].qtyRaw : (state.person)*state.clusters;
+    rows.push(mk(desc, qty));
   }
 
   // Row 25 — access flap
@@ -600,6 +618,343 @@ function choiceButtons(containerId, options, currentKey, fmt){
   });
 }
 
+/* ===================== CONFIG CODE (MOTION001-MOTION280) + LP LOOKUP =====================
+   Sourced directly from LP.xlsx (280 rows, MOTION001-MOTION280).
+   Each entry maps a configuration key to its real product code + list price.
+
+   Key format: TYPE-PERSON-FLAP-PRIV[-PANEL]-L{length}-D{depth}-H{height}
+     TYPE   : BTB | FST
+     PERSON : 01 (FST) | 02 | 04   (the LP table only covers 1P/2P/4P)
+     FLAP   : FLAP | NOFLAP        (the source data does not distinguish flap side —
+                                     LHS/RHS/CENTRE all map to the same FLAP code/price)
+     PRIV   : NOP | PNL-FAB | PNL-MFB
+     L/D/H  : exact length/depth/height in mm
+
+   Source data only covers 1P/2P/4P workstations (not 6/8/10P) and a specific subset
+   of height/privacy/flap combinations (e.g. NOP only exists at H750 for FST; BTB has
+   no NOP or NOFLAP variants at all). Configurations outside this table show '—' for
+   both the configuration code and list price rather than a guessed value.
+------------------------------------------------------------------*/
+const CONFIG_TABLE = {
+  'BTB-02-FLAP-PNL-FAB-L1200-D600-H1050': { code: 'MOTION081', lp: 79181 },
+  'BTB-02-FLAP-PNL-FAB-L1200-D600-H1200': { code: 'MOTION101', lp: 79801 },
+  'BTB-02-FLAP-PNL-FAB-L1200-D700-H1050': { code: 'MOTION086', lp: 81097 },
+  'BTB-02-FLAP-PNL-FAB-L1200-D700-H1200': { code: 'MOTION106', lp: 81717 },
+  'BTB-02-FLAP-PNL-FAB-L1200-D750-H1050': { code: 'MOTION091', lp: 81337 },
+  'BTB-02-FLAP-PNL-FAB-L1200-D750-H1200': { code: 'MOTION111', lp: 81957 },
+  'BTB-02-FLAP-PNL-FAB-L1200-D800-H1050': { code: 'MOTION096', lp: 82247 },
+  'BTB-02-FLAP-PNL-FAB-L1200-D800-H1200': { code: 'MOTION116', lp: 82867 },
+  'BTB-02-FLAP-PNL-FAB-L1350-D600-H1050': { code: 'MOTION082', lp: 81901 },
+  'BTB-02-FLAP-PNL-FAB-L1350-D600-H1200': { code: 'MOTION102', lp: 82381 },
+  'BTB-02-FLAP-PNL-FAB-L1350-D700-H1050': { code: 'MOTION087', lp: 84617 },
+  'BTB-02-FLAP-PNL-FAB-L1350-D700-H1200': { code: 'MOTION107', lp: 85097 },
+  'BTB-02-FLAP-PNL-FAB-L1350-D750-H1050': { code: 'MOTION092', lp: 84857 },
+  'BTB-02-FLAP-PNL-FAB-L1350-D750-H1200': { code: 'MOTION112', lp: 85337 },
+  'BTB-02-FLAP-PNL-FAB-L1350-D800-H1050': { code: 'MOTION097', lp: 85177 },
+  'BTB-02-FLAP-PNL-FAB-L1350-D800-H1200': { code: 'MOTION117', lp: 85657 },
+  'BTB-02-FLAP-PNL-FAB-L1500-D600-H1050': { code: 'MOTION083', lp: 83131 },
+  'BTB-02-FLAP-PNL-FAB-L1500-D600-H1200': { code: 'MOTION103', lp: 83711 },
+  'BTB-02-FLAP-PNL-FAB-L1500-D700-H1050': { code: 'MOTION088', lp: 85947 },
+  'BTB-02-FLAP-PNL-FAB-L1500-D700-H1200': { code: 'MOTION108', lp: 86527 },
+  'BTB-02-FLAP-PNL-FAB-L1500-D750-H1050': { code: 'MOTION093', lp: 86187 },
+  'BTB-02-FLAP-PNL-FAB-L1500-D750-H1200': { code: 'MOTION113', lp: 86767 },
+  'BTB-02-FLAP-PNL-FAB-L1500-D800-H1050': { code: 'MOTION098', lp: 86507 },
+  'BTB-02-FLAP-PNL-FAB-L1500-D800-H1200': { code: 'MOTION118', lp: 87087 },
+  'BTB-02-FLAP-PNL-FAB-L1650-D600-H1050': { code: 'MOTION084', lp: 84451 },
+  'BTB-02-FLAP-PNL-FAB-L1650-D600-H1200': { code: 'MOTION104', lp: 85081 },
+  'BTB-02-FLAP-PNL-FAB-L1650-D700-H1050': { code: 'MOTION089', lp: 87347 },
+  'BTB-02-FLAP-PNL-FAB-L1650-D700-H1200': { code: 'MOTION109', lp: 87977 },
+  'BTB-02-FLAP-PNL-FAB-L1650-D750-H1050': { code: 'MOTION094', lp: 87587 },
+  'BTB-02-FLAP-PNL-FAB-L1650-D750-H1200': { code: 'MOTION114', lp: 88217 },
+  'BTB-02-FLAP-PNL-FAB-L1650-D800-H1050': { code: 'MOTION099', lp: 87927 },
+  'BTB-02-FLAP-PNL-FAB-L1650-D800-H1200': { code: 'MOTION119', lp: 88557 },
+  'BTB-02-FLAP-PNL-FAB-L1800-D600-H1050': { code: 'MOTION085', lp: 85771 },
+  'BTB-02-FLAP-PNL-FAB-L1800-D600-H1200': { code: 'MOTION105', lp: 86431 },
+  'BTB-02-FLAP-PNL-FAB-L1800-D700-H1050': { code: 'MOTION090', lp: 88747 },
+  'BTB-02-FLAP-PNL-FAB-L1800-D700-H1200': { code: 'MOTION110', lp: 89407 },
+  'BTB-02-FLAP-PNL-FAB-L1800-D750-H1050': { code: 'MOTION095', lp: 88987 },
+  'BTB-02-FLAP-PNL-FAB-L1800-D750-H1200': { code: 'MOTION115', lp: 89647 },
+  'BTB-02-FLAP-PNL-FAB-L1800-D800-H1050': { code: 'MOTION100', lp: 89327 },
+  'BTB-02-FLAP-PNL-FAB-L1800-D800-H1200': { code: 'MOTION120', lp: 89987 },
+  'BTB-02-FLAP-PNL-MFB-L1200-D600-H1050': { code: 'MOTION121', lp: 80471 },
+  'BTB-02-FLAP-PNL-MFB-L1200-D600-H1200': { code: 'MOTION141', lp: 81401 },
+  'BTB-02-FLAP-PNL-MFB-L1200-D700-H1050': { code: 'MOTION126', lp: 82387 },
+  'BTB-02-FLAP-PNL-MFB-L1200-D700-H1200': { code: 'MOTION146', lp: 83317 },
+  'BTB-02-FLAP-PNL-MFB-L1200-D750-H1050': { code: 'MOTION131', lp: 82627 },
+  'BTB-02-FLAP-PNL-MFB-L1200-D750-H1200': { code: 'MOTION151', lp: 83557 },
+  'BTB-02-FLAP-PNL-MFB-L1200-D800-H1050': { code: 'MOTION136', lp: 83537 },
+  'BTB-02-FLAP-PNL-MFB-L1200-D800-H1200': { code: 'MOTION156', lp: 84467 },
+  'BTB-02-FLAP-PNL-MFB-L1350-D600-H1050': { code: 'MOTION122', lp: 83361 },
+  'BTB-02-FLAP-PNL-MFB-L1350-D600-H1200': { code: 'MOTION142', lp: 84191 },
+  'BTB-02-FLAP-PNL-MFB-L1350-D700-H1050': { code: 'MOTION127', lp: 86077 },
+  'BTB-02-FLAP-PNL-MFB-L1350-D700-H1200': { code: 'MOTION147', lp: 86907 },
+  'BTB-02-FLAP-PNL-MFB-L1350-D750-H1050': { code: 'MOTION132', lp: 86317 },
+  'BTB-02-FLAP-PNL-MFB-L1350-D750-H1200': { code: 'MOTION152', lp: 87147 },
+  'BTB-02-FLAP-PNL-MFB-L1350-D800-H1050': { code: 'MOTION137', lp: 86637 },
+  'BTB-02-FLAP-PNL-MFB-L1350-D800-H1200': { code: 'MOTION157', lp: 87467 },
+  'BTB-02-FLAP-PNL-MFB-L1500-D600-H1050': { code: 'MOTION123', lp: 84771 },
+  'BTB-02-FLAP-PNL-MFB-L1500-D600-H1200': { code: 'MOTION143', lp: 85711 },
+  'BTB-02-FLAP-PNL-MFB-L1500-D700-H1050': { code: 'MOTION128', lp: 87587 },
+  'BTB-02-FLAP-PNL-MFB-L1500-D700-H1200': { code: 'MOTION148', lp: 88527 },
+  'BTB-02-FLAP-PNL-MFB-L1500-D750-H1050': { code: 'MOTION133', lp: 87827 },
+  'BTB-02-FLAP-PNL-MFB-L1500-D750-H1200': { code: 'MOTION153', lp: 88767 },
+  'BTB-02-FLAP-PNL-MFB-L1500-D800-H1050': { code: 'MOTION138', lp: 88147 },
+  'BTB-02-FLAP-PNL-MFB-L1500-D800-H1200': { code: 'MOTION158', lp: 89087 },
+  'BTB-02-FLAP-PNL-MFB-L1650-D600-H1050': { code: 'MOTION124', lp: 86241 },
+  'BTB-02-FLAP-PNL-MFB-L1650-D600-H1200': { code: 'MOTION144', lp: 87281 },
+  'BTB-02-FLAP-PNL-MFB-L1650-D700-H1050': { code: 'MOTION129', lp: 89137 },
+  'BTB-02-FLAP-PNL-MFB-L1650-D700-H1200': { code: 'MOTION149', lp: 90177 },
+  'BTB-02-FLAP-PNL-MFB-L1650-D750-H1050': { code: 'MOTION134', lp: 89377 },
+  'BTB-02-FLAP-PNL-MFB-L1650-D750-H1200': { code: 'MOTION154', lp: 90417 },
+  'BTB-02-FLAP-PNL-MFB-L1650-D800-H1050': { code: 'MOTION139', lp: 89717 },
+  'BTB-02-FLAP-PNL-MFB-L1650-D800-H1200': { code: 'MOTION159', lp: 90757 },
+  'BTB-02-FLAP-PNL-MFB-L1800-D600-H1050': { code: 'MOTION125', lp: 87731 },
+  'BTB-02-FLAP-PNL-MFB-L1800-D600-H1200': { code: 'MOTION145', lp: 88861 },
+  'BTB-02-FLAP-PNL-MFB-L1800-D700-H1050': { code: 'MOTION130', lp: 90707 },
+  'BTB-02-FLAP-PNL-MFB-L1800-D700-H1200': { code: 'MOTION150', lp: 91837 },
+  'BTB-02-FLAP-PNL-MFB-L1800-D750-H1050': { code: 'MOTION135', lp: 90947 },
+  'BTB-02-FLAP-PNL-MFB-L1800-D750-H1200': { code: 'MOTION155', lp: 92077 },
+  'BTB-02-FLAP-PNL-MFB-L1800-D800-H1050': { code: 'MOTION140', lp: 91287 },
+  'BTB-02-FLAP-PNL-MFB-L1800-D800-H1200': { code: 'MOTION160', lp: 92417 },
+  'BTB-04-FLAP-PNL-FAB-L1200-D600-H1050': { code: 'MOTION161', lp: 158995 },
+  'BTB-04-FLAP-PNL-FAB-L1200-D600-H1200': { code: 'MOTION181', lp: 160235 },
+  'BTB-04-FLAP-PNL-FAB-L1200-D700-H1050': { code: 'MOTION166', lp: 162827 },
+  'BTB-04-FLAP-PNL-FAB-L1200-D700-H1200': { code: 'MOTION186', lp: 164067 },
+  'BTB-04-FLAP-PNL-FAB-L1200-D750-H1050': { code: 'MOTION171', lp: 163307 },
+  'BTB-04-FLAP-PNL-FAB-L1200-D750-H1200': { code: 'MOTION191', lp: 164547 },
+  'BTB-04-FLAP-PNL-FAB-L1200-D800-H1050': { code: 'MOTION176', lp: 163947 },
+  'BTB-04-FLAP-PNL-FAB-L1200-D800-H1200': { code: 'MOTION196', lp: 165187 },
+  'BTB-04-FLAP-PNL-FAB-L1350-D600-H1050': { code: 'MOTION162', lp: 164435 },
+  'BTB-04-FLAP-PNL-FAB-L1350-D600-H1200': { code: 'MOTION182', lp: 165395 },
+  'BTB-04-FLAP-PNL-FAB-L1350-D700-H1050': { code: 'MOTION167', lp: 169867 },
+  'BTB-04-FLAP-PNL-FAB-L1350-D700-H1200': { code: 'MOTION187', lp: 170827 },
+  'BTB-04-FLAP-PNL-FAB-L1350-D750-H1050': { code: 'MOTION172', lp: 170347 },
+  'BTB-04-FLAP-PNL-FAB-L1350-D750-H1200': { code: 'MOTION192', lp: 171307 },
+  'BTB-04-FLAP-PNL-FAB-L1350-D800-H1050': { code: 'MOTION177', lp: 170987 },
+  'BTB-04-FLAP-PNL-FAB-L1350-D800-H1200': { code: 'MOTION197', lp: 171947 },
+  'BTB-04-FLAP-PNL-FAB-L1500-D600-H1050': { code: 'MOTION163', lp: 166895 },
+  'BTB-04-FLAP-PNL-FAB-L1500-D600-H1200': { code: 'MOTION183', lp: 168055 },
+  'BTB-04-FLAP-PNL-FAB-L1500-D700-H1050': { code: 'MOTION168', lp: 172527 },
+  'BTB-04-FLAP-PNL-FAB-L1500-D700-H1200': { code: 'MOTION188', lp: 173687 },
+  'BTB-04-FLAP-PNL-FAB-L1500-D750-H1050': { code: 'MOTION173', lp: 173007 },
+  'BTB-04-FLAP-PNL-FAB-L1500-D750-H1200': { code: 'MOTION193', lp: 174167 },
+  'BTB-04-FLAP-PNL-FAB-L1500-D800-H1050': { code: 'MOTION178', lp: 173647 },
+  'BTB-04-FLAP-PNL-FAB-L1500-D800-H1200': { code: 'MOTION198', lp: 174807 },
+  'BTB-04-FLAP-PNL-FAB-L1650-D600-H1050': { code: 'MOTION164', lp: 169535 },
+  'BTB-04-FLAP-PNL-FAB-L1650-D600-H1200': { code: 'MOTION184', lp: 170795 },
+  'BTB-04-FLAP-PNL-FAB-L1650-D700-H1050': { code: 'MOTION169', lp: 175327 },
+  'BTB-04-FLAP-PNL-FAB-L1650-D700-H1200': { code: 'MOTION189', lp: 176587 },
+  'BTB-04-FLAP-PNL-FAB-L1650-D750-H1050': { code: 'MOTION174', lp: 175247 },
+  'BTB-04-FLAP-PNL-FAB-L1650-D750-H1200': { code: 'MOTION194', lp: 177067 },
+  'BTB-04-FLAP-PNL-FAB-L1650-D800-H1050': { code: 'MOTION179', lp: 176487 },
+  'BTB-04-FLAP-PNL-FAB-L1650-D800-H1200': { code: 'MOTION199', lp: 177747 },
+  'BTB-04-FLAP-PNL-FAB-L1800-D600-H1050': { code: 'MOTION165', lp: 172175 },
+  'BTB-04-FLAP-PNL-FAB-L1800-D600-H1200': { code: 'MOTION185', lp: 173495 },
+  'BTB-04-FLAP-PNL-FAB-L1800-D700-H1050': { code: 'MOTION170', lp: 178127 },
+  'BTB-04-FLAP-PNL-FAB-L1800-D700-H1200': { code: 'MOTION190', lp: 179447 },
+  'BTB-04-FLAP-PNL-FAB-L1800-D750-H1050': { code: 'MOTION175', lp: 178607 },
+  'BTB-04-FLAP-PNL-FAB-L1800-D750-H1200': { code: 'MOTION195', lp: 179927 },
+  'BTB-04-FLAP-PNL-FAB-L1800-D800-H1050': { code: 'MOTION180', lp: 160235 },
+  'BTB-04-FLAP-PNL-FAB-L1800-D800-H1200': { code: 'MOTION200', lp: 180607 },
+  'BTB-04-FLAP-PNL-MFB-L1200-D600-H1050': { code: 'MOTION201', lp: 161575 },
+  'BTB-04-FLAP-PNL-MFB-L1200-D600-H1200': { code: 'MOTION221', lp: 163435 },
+  'BTB-04-FLAP-PNL-MFB-L1200-D700-H1050': { code: 'MOTION206', lp: 165407 },
+  'BTB-04-FLAP-PNL-MFB-L1200-D700-H1200': { code: 'MOTION226', lp: 167267 },
+  'BTB-04-FLAP-PNL-MFB-L1200-D750-H1050': { code: 'MOTION211', lp: 165887 },
+  'BTB-04-FLAP-PNL-MFB-L1200-D750-H1200': { code: 'MOTION231', lp: 167747 },
+  'BTB-04-FLAP-PNL-MFB-L1200-D800-H1050': { code: 'MOTION216', lp: 166527 },
+  'BTB-04-FLAP-PNL-MFB-L1200-D800-H1200': { code: 'MOTION236', lp: 168387 },
+  'BTB-04-FLAP-PNL-MFB-L1350-D600-H1050': { code: 'MOTION202', lp: 167355 },
+  'BTB-04-FLAP-PNL-MFB-L1350-D600-H1200': { code: 'MOTION222', lp: 169015 },
+  'BTB-04-FLAP-PNL-MFB-L1350-D700-H1050': { code: 'MOTION207', lp: 172787 },
+  'BTB-04-FLAP-PNL-MFB-L1350-D700-H1200': { code: 'MOTION227', lp: 174447 },
+  'BTB-04-FLAP-PNL-MFB-L1350-D750-H1050': { code: 'MOTION212', lp: 173267 },
+  'BTB-04-FLAP-PNL-MFB-L1350-D750-H1200': { code: 'MOTION232', lp: 174927 },
+  'BTB-04-FLAP-PNL-MFB-L1350-D800-H1050': { code: 'MOTION217', lp: 173907 },
+  'BTB-04-FLAP-PNL-MFB-L1350-D800-H1200': { code: 'MOTION237', lp: 175567 },
+  'BTB-04-FLAP-PNL-MFB-L1500-D600-H1050': { code: 'MOTION203', lp: 170175 },
+  'BTB-04-FLAP-PNL-MFB-L1500-D600-H1200': { code: 'MOTION223', lp: 172055 },
+  'BTB-04-FLAP-PNL-MFB-L1500-D700-H1050': { code: 'MOTION208', lp: 175807 },
+  'BTB-04-FLAP-PNL-MFB-L1500-D700-H1200': { code: 'MOTION228', lp: 177687 },
+  'BTB-04-FLAP-PNL-MFB-L1500-D750-H1050': { code: 'MOTION213', lp: 181467 },
+  'BTB-04-FLAP-PNL-MFB-L1500-D750-H1200': { code: 'MOTION233', lp: 178167 },
+  'BTB-04-FLAP-PNL-MFB-L1500-D800-H1050': { code: 'MOTION218', lp: 176927 },
+  'BTB-04-FLAP-PNL-MFB-L1500-D800-H1200': { code: 'MOTION238', lp: 178807 },
+  'BTB-04-FLAP-PNL-MFB-L1650-D600-H1050': { code: 'MOTION204', lp: 173115 },
+  'BTB-04-FLAP-PNL-MFB-L1650-D600-H1200': { code: 'MOTION224', lp: 175195 },
+  'BTB-04-FLAP-PNL-MFB-L1650-D700-H1050': { code: 'MOTION209', lp: 178907 },
+  'BTB-04-FLAP-PNL-MFB-L1650-D700-H1200': { code: 'MOTION229', lp: 180987 },
+  'BTB-04-FLAP-PNL-MFB-L1650-D750-H1050': { code: 'MOTION214', lp: 181467 },
+  'BTB-04-FLAP-PNL-MFB-L1650-D750-H1200': { code: 'MOTION234', lp: 181467 },
+  'BTB-04-FLAP-PNL-MFB-L1650-D800-H1050': { code: 'MOTION219', lp: 180067 },
+  'BTB-04-FLAP-PNL-MFB-L1650-D800-H1200': { code: 'MOTION239', lp: 182147 },
+  'BTB-04-FLAP-PNL-MFB-L1800-D600-H1050': { code: 'MOTION205', lp: 176095 },
+  'BTB-04-FLAP-PNL-MFB-L1800-D600-H1200': { code: 'MOTION225', lp: 178355 },
+  'BTB-04-FLAP-PNL-MFB-L1800-D700-H1050': { code: 'MOTION210', lp: 182047 },
+  'BTB-04-FLAP-PNL-MFB-L1800-D700-H1200': { code: 'MOTION230', lp: 184307 },
+  'BTB-04-FLAP-PNL-MFB-L1800-D750-H1050': { code: 'MOTION215', lp: 184787 },
+  'BTB-04-FLAP-PNL-MFB-L1800-D750-H1200': { code: 'MOTION235', lp: 184787 },
+  'BTB-04-FLAP-PNL-MFB-L1800-D800-H1050': { code: 'MOTION220', lp: 183207 },
+  'BTB-04-FLAP-PNL-MFB-L1800-D800-H1200': { code: 'MOTION240', lp: 185467 },
+  'FST-01-FLAP-NOP-L1200-D600-H750': { code: 'MOTION241', lp: 38269 },
+  'FST-01-FLAP-NOP-L1200-D700-H750': { code: 'MOTION246', lp: 39127 },
+  'FST-01-FLAP-NOP-L1200-D750-H750': { code: 'MOTION251', lp: 39567 },
+  'FST-01-FLAP-NOP-L1200-D800-H750': { code: 'MOTION256', lp: 39847 },
+  'FST-01-FLAP-NOP-L1350-D600-H750': { code: 'MOTION242', lp: 39239 },
+  'FST-01-FLAP-NOP-L1350-D700-H750': { code: 'MOTION247', lp: 40497 },
+  'FST-01-FLAP-NOP-L1350-D750-H750': { code: 'MOTION252', lp: 40937 },
+  'FST-01-FLAP-NOP-L1350-D800-H750': { code: 'MOTION257', lp: 41217 },
+  'FST-01-FLAP-NOP-L1500-D600-H750': { code: 'MOTION243', lp: 39479 },
+  'FST-01-FLAP-NOP-L1500-D700-H750': { code: 'MOTION248', lp: 40787 },
+  'FST-01-FLAP-NOP-L1500-D750-H750': { code: 'MOTION253', lp: 41227 },
+  'FST-01-FLAP-NOP-L1500-D800-H750': { code: 'MOTION258', lp: 41507 },
+  'FST-01-FLAP-NOP-L1650-D600-H750': { code: 'MOTION244', lp: 39739 },
+  'FST-01-FLAP-NOP-L1650-D700-H750': { code: 'MOTION249', lp: 41087 },
+  'FST-01-FLAP-NOP-L1650-D750-H750': { code: 'MOTION254', lp: 41527 },
+  'FST-01-FLAP-NOP-L1650-D800-H750': { code: 'MOTION259', lp: 41817 },
+  'FST-01-FLAP-NOP-L1800-D600-H750': { code: 'MOTION245', lp: 40009 },
+  'FST-01-FLAP-NOP-L1800-D700-H750': { code: 'MOTION250', lp: 41397 },
+  'FST-01-FLAP-NOP-L1800-D750-H750': { code: 'MOTION255', lp: 41837 },
+  'FST-01-FLAP-NOP-L1800-D800-H750': { code: 'MOTION260', lp: 42127 },
+  'FST-01-FLAP-PNL-FAB-L1200-D600-H1050': { code: 'MOTION001', lp: 43135 },
+  'FST-01-FLAP-PNL-FAB-L1200-D600-H1200': { code: 'MOTION021', lp: 43135 },
+  'FST-01-FLAP-PNL-FAB-L1200-D700-H1050': { code: 'MOTION006', lp: 43993 },
+  'FST-01-FLAP-PNL-FAB-L1200-D700-H1200': { code: 'MOTION026', lp: 43993 },
+  'FST-01-FLAP-PNL-FAB-L1200-D750-H1050': { code: 'MOTION011', lp: 44433 },
+  'FST-01-FLAP-PNL-FAB-L1200-D750-H1200': { code: 'MOTION031', lp: 44433 },
+  'FST-01-FLAP-PNL-FAB-L1200-D800-H1050': { code: 'MOTION016', lp: 44713 },
+  'FST-01-FLAP-PNL-FAB-L1200-D800-H1200': { code: 'MOTION036', lp: 44713 },
+  'FST-01-FLAP-PNL-FAB-L1350-D600-H1050': { code: 'MOTION002', lp: 44595 },
+  'FST-01-FLAP-PNL-FAB-L1350-D600-H1200': { code: 'MOTION022', lp: 44595 },
+  'FST-01-FLAP-PNL-FAB-L1350-D700-H1050': { code: 'MOTION007', lp: 45853 },
+  'FST-01-FLAP-PNL-FAB-L1350-D700-H1200': { code: 'MOTION027', lp: 45853 },
+  'FST-01-FLAP-PNL-FAB-L1350-D750-H1050': { code: 'MOTION012', lp: 46293 },
+  'FST-01-FLAP-PNL-FAB-L1350-D750-H1200': { code: 'MOTION032', lp: 46293 },
+  'FST-01-FLAP-PNL-FAB-L1350-D800-H1050': { code: 'MOTION017', lp: 46573 },
+  'FST-01-FLAP-PNL-FAB-L1350-D800-H1200': { code: 'MOTION037', lp: 46573 },
+  'FST-01-FLAP-PNL-FAB-L1500-D600-H1050': { code: 'MOTION003', lp: 45451 },
+  'FST-01-FLAP-PNL-FAB-L1500-D600-H1200': { code: 'MOTION023', lp: 45451 },
+  'FST-01-FLAP-PNL-FAB-L1500-D700-H1050': { code: 'MOTION008', lp: 46759 },
+  'FST-01-FLAP-PNL-FAB-L1500-D700-H1200': { code: 'MOTION028', lp: 46759 },
+  'FST-01-FLAP-PNL-FAB-L1500-D750-H1050': { code: 'MOTION013', lp: 47199 },
+  'FST-01-FLAP-PNL-FAB-L1500-D750-H1200': { code: 'MOTION033', lp: 47199 },
+  'FST-01-FLAP-PNL-FAB-L1500-D800-H1050': { code: 'MOTION018', lp: 47479 },
+  'FST-01-FLAP-PNL-FAB-L1500-D800-H1200': { code: 'MOTION038', lp: 47479 },
+  'FST-01-FLAP-PNL-FAB-L1650-D600-H1050': { code: 'MOTION004', lp: 46201 },
+  'FST-01-FLAP-PNL-FAB-L1650-D600-H1200': { code: 'MOTION024', lp: 46201 },
+  'FST-01-FLAP-PNL-FAB-L1650-D700-H1050': { code: 'MOTION009', lp: 47549 },
+  'FST-01-FLAP-PNL-FAB-L1650-D700-H1200': { code: 'MOTION029', lp: 47549 },
+  'FST-01-FLAP-PNL-FAB-L1650-D750-H1050': { code: 'MOTION014', lp: 47989 },
+  'FST-01-FLAP-PNL-FAB-L1650-D750-H1200': { code: 'MOTION034', lp: 47989 },
+  'FST-01-FLAP-PNL-FAB-L1650-D800-H1050': { code: 'MOTION019', lp: 48279 },
+  'FST-01-FLAP-PNL-FAB-L1650-D800-H1200': { code: 'MOTION039', lp: 48279 },
+  'FST-01-FLAP-PNL-FAB-L1800-D600-H1050': { code: 'MOTION005', lp: 46971 },
+  'FST-01-FLAP-PNL-FAB-L1800-D600-H1200': { code: 'MOTION025', lp: 46971 },
+  'FST-01-FLAP-PNL-FAB-L1800-D700-H1050': { code: 'MOTION010', lp: 48359 },
+  'FST-01-FLAP-PNL-FAB-L1800-D700-H1200': { code: 'MOTION030', lp: 48359 },
+  'FST-01-FLAP-PNL-FAB-L1800-D750-H1050': { code: 'MOTION015', lp: 48799 },
+  'FST-01-FLAP-PNL-FAB-L1800-D750-H1200': { code: 'MOTION035', lp: 48799 },
+  'FST-01-FLAP-PNL-FAB-L1800-D800-H1050': { code: 'MOTION020', lp: 49089 },
+  'FST-01-FLAP-PNL-FAB-L1800-D800-H1200': { code: 'MOTION040', lp: 49089 },
+  'FST-01-FLAP-PNL-MFB-L1200-D600-H1050': { code: 'MOTION041', lp: 44625 },
+  'FST-01-FLAP-PNL-MFB-L1200-D600-H1200': { code: 'MOTION061', lp: 44625 },
+  'FST-01-FLAP-PNL-MFB-L1200-D700-H1050': { code: 'MOTION046', lp: 45483 },
+  'FST-01-FLAP-PNL-MFB-L1200-D700-H1200': { code: 'MOTION066', lp: 45483 },
+  'FST-01-FLAP-PNL-MFB-L1200-D750-H1050': { code: 'MOTION051', lp: 45923 },
+  'FST-01-FLAP-PNL-MFB-L1200-D750-H1200': { code: 'MOTION071', lp: 45923 },
+  'FST-01-FLAP-PNL-MFB-L1200-D800-H1050': { code: 'MOTION056', lp: 46203 },
+  'FST-01-FLAP-PNL-MFB-L1200-D800-H1200': { code: 'MOTION076', lp: 46203 },
+  'FST-01-FLAP-PNL-MFB-L1350-D600-H1050': { code: 'MOTION042', lp: 46275 },
+  'FST-01-FLAP-PNL-MFB-L1350-D600-H1200': { code: 'MOTION062', lp: 46275 },
+  'FST-01-FLAP-PNL-MFB-L1350-D700-H1050': { code: 'MOTION047', lp: 47533 },
+  'FST-01-FLAP-PNL-MFB-L1350-D700-H1200': { code: 'MOTION067', lp: 47533 },
+  'FST-01-FLAP-PNL-MFB-L1350-D750-H1050': { code: 'MOTION052', lp: 47973 },
+  'FST-01-FLAP-PNL-MFB-L1350-D750-H1200': { code: 'MOTION072', lp: 47973 },
+  'FST-01-FLAP-PNL-MFB-L1350-D800-H1050': { code: 'MOTION057', lp: 48253 },
+  'FST-01-FLAP-PNL-MFB-L1350-D800-H1200': { code: 'MOTION077', lp: 48253 },
+  'FST-01-FLAP-PNL-MFB-L1500-D600-H1050': { code: 'MOTION043', lp: 47321 },
+  'FST-01-FLAP-PNL-MFB-L1500-D600-H1200': { code: 'MOTION063', lp: 47321 },
+  'FST-01-FLAP-PNL-MFB-L1500-D700-H1050': { code: 'MOTION048', lp: 48629 },
+  'FST-01-FLAP-PNL-MFB-L1500-D700-H1200': { code: 'MOTION068', lp: 48629 },
+  'FST-01-FLAP-PNL-MFB-L1500-D750-H1050': { code: 'MOTION053', lp: 49069 },
+  'FST-01-FLAP-PNL-MFB-L1500-D750-H1200': { code: 'MOTION073', lp: 49069 },
+  'FST-01-FLAP-PNL-MFB-L1500-D800-H1050': { code: 'MOTION058', lp: 49349 },
+  'FST-01-FLAP-PNL-MFB-L1500-D800-H1200': { code: 'MOTION078', lp: 49349 },
+  'FST-01-FLAP-PNL-MFB-L1650-D600-H1050': { code: 'MOTION044', lp: 48251 },
+  'FST-01-FLAP-PNL-MFB-L1650-D600-H1200': { code: 'MOTION064', lp: 48251 },
+  'FST-01-FLAP-PNL-MFB-L1650-D700-H1050': { code: 'MOTION049', lp: 49599 },
+  'FST-01-FLAP-PNL-MFB-L1650-D700-H1200': { code: 'MOTION069', lp: 49599 },
+  'FST-01-FLAP-PNL-MFB-L1650-D750-H1050': { code: 'MOTION054', lp: 50039 },
+  'FST-01-FLAP-PNL-MFB-L1650-D750-H1200': { code: 'MOTION074', lp: 50039 },
+  'FST-01-FLAP-PNL-MFB-L1650-D800-H1050': { code: 'MOTION059', lp: 50329 },
+  'FST-01-FLAP-PNL-MFB-L1650-D800-H1200': { code: 'MOTION079', lp: 50329 },
+  'FST-01-FLAP-PNL-MFB-L1800-D600-H1050': { code: 'MOTION045', lp: 49201 },
+  'FST-01-FLAP-PNL-MFB-L1800-D600-H1200': { code: 'MOTION065', lp: 49201 },
+  'FST-01-FLAP-PNL-MFB-L1800-D700-H1050': { code: 'MOTION050', lp: 50589 },
+  'FST-01-FLAP-PNL-MFB-L1800-D700-H1200': { code: 'MOTION070', lp: 50589 },
+  'FST-01-FLAP-PNL-MFB-L1800-D750-H1050': { code: 'MOTION055', lp: 51029 },
+  'FST-01-FLAP-PNL-MFB-L1800-D750-H1200': { code: 'MOTION075', lp: 51029 },
+  'FST-01-FLAP-PNL-MFB-L1800-D800-H1050': { code: 'MOTION060', lp: 51319 },
+  'FST-01-FLAP-PNL-MFB-L1800-D800-H1200': { code: 'MOTION080', lp: 51319 },
+  'FST-01-NOFLAP-NOP-L1200-D600-H750': { code: 'MOTION261', lp: 34652 },
+  'FST-01-NOFLAP-NOP-L1200-D700-H750': { code: 'MOTION266', lp: 35510 },
+  'FST-01-NOFLAP-NOP-L1200-D750-H750': { code: 'MOTION271', lp: 35950 },
+  'FST-01-NOFLAP-NOP-L1200-D800-H750': { code: 'MOTION276', lp: 36230 },
+  'FST-01-NOFLAP-NOP-L1350-D600-H750': { code: 'MOTION262', lp: 35622 },
+  'FST-01-NOFLAP-NOP-L1350-D700-H750': { code: 'MOTION267', lp: 36880 },
+  'FST-01-NOFLAP-NOP-L1350-D750-H750': { code: 'MOTION272', lp: 37320 },
+  'FST-01-NOFLAP-NOP-L1350-D800-H750': { code: 'MOTION277', lp: 37600 },
+  'FST-01-NOFLAP-NOP-L1500-D600-H750': { code: 'MOTION263', lp: 35862 },
+  'FST-01-NOFLAP-NOP-L1500-D700-H750': { code: 'MOTION268', lp: 37170 },
+  'FST-01-NOFLAP-NOP-L1500-D750-H750': { code: 'MOTION273', lp: 37610 },
+  'FST-01-NOFLAP-NOP-L1500-D800-H750': { code: 'MOTION278', lp: 37890 },
+  'FST-01-NOFLAP-NOP-L1650-D600-H750': { code: 'MOTION264', lp: 36122 },
+  'FST-01-NOFLAP-NOP-L1650-D700-H750': { code: 'MOTION269', lp: 37470 },
+  'FST-01-NOFLAP-NOP-L1650-D750-H750': { code: 'MOTION274', lp: 37910 },
+  'FST-01-NOFLAP-NOP-L1650-D800-H750': { code: 'MOTION279', lp: 38200 },
+  'FST-01-NOFLAP-NOP-L1800-D600-H750': { code: 'MOTION265', lp: 36392 },
+  'FST-01-NOFLAP-NOP-L1800-D700-H750': { code: 'MOTION270', lp: 37780 },
+  'FST-01-NOFLAP-NOP-L1800-D750-H750': { code: 'MOTION275', lp: 38220 },
+  'FST-01-NOFLAP-NOP-L1800-D800-H750': { code: 'MOTION280', lp: 38510 },
+};
+
+/* Formats a number using Indian digit grouping (lakh/crore), e.g. 1250000 -> "1,25,000" */
+function formatIndianCurrency(n){
+  n = Math.round(n);
+  const s = String(n);
+  if(s.length <= 3) return '₹ ' + s;
+  const last3 = s.slice(-3);
+  let rest = s.slice(0, -3);
+  const parts = [];
+  while(rest.length > 2){
+    parts.unshift(rest.slice(-2));
+    rest = rest.slice(0, -2);
+  }
+  if(rest) parts.unshift(rest);
+  return '₹ ' + parts.join(',') + ',' + last3;
+}
+
+function buildConfigKey(){
+  const fs = isFS();
+  const typeTag = fs ? 'FST' : 'BTB';
+  const personTag = fs ? '01' : String(state.person).padStart(2,'0');
+  const flapNo = state.accessFlap.toUpperCase() === 'NO';
+  const flapTag = flapNo ? 'NOFLAP' : 'FLAP';
+  const privNo = state.privacy.toLowerCase() === 'no';
+  const privTag = privNo ? 'NOP' : ('PNL-' + (state.panelType === 'MAGNETIC FAB' ? 'MFB' : 'FAB'));
+  return `${typeTag}-${personTag}-${flapTag}-${privTag}-L${state.length}-D${state.depth}-H${state.height}`;
+}
+
+function buildConfigLabel(){
+  const fs     = isFS();
+  const type   = fs ? 'Free Standing' : `Back to Back ${state.person} Person`;
+  const flapLabelMap = { LHS:'LHS Access Flap', RHS:'RHS Access Flap', CENTRE:'Centre Access Flap', NO:'No Access Flap' };
+  const flap   = flapLabelMap[state.accessFlap.toUpperCase()] || state.accessFlap;
+  const privNo = state.privacy.toLowerCase() === 'no';
+  const priv   = privNo ? 'No Privacy Panel' : `${state.panelType} Privacy Panel`;
+  return `${type} · ${flap} · ${priv}`;
+}
+
 function render(){
   const fs = isFS();
 
@@ -621,7 +976,26 @@ function render(){
   choiceButtons('privacyTypeChoices', OPTIONS.panelType, 'panelType');
   choiceButtons('lengthChoices', OPTIONS.length, 'length', v => v+'mm');
   choiceButtons('depthChoices', OPTIONS.depth, 'depth', v => v+'mm');
-  choiceButtons('heightChoices', OPTIONS.height, 'height', v => v+'mm');
+  // Height options depend on workstation type AND privacy, since the priced
+  // data only ever pairs 750mm with "no privacy panel" on Free Standing:
+  //   - Back to Back            -> always 1050/1200
+  //   - Free Standing, Privacy=No  -> only 750 is priced, so only 750 is shown
+  //   - Free Standing, Privacy=Yes -> only 1050/1200 are priced, so 750 is hidden
+  const fstNoPriv = fs && state.privacy.toLowerCase() === 'no';
+  let heightOpts;
+  if(!fs){
+    heightOpts = OPTIONS.height;               // BTB: 1050, 1200
+    if(state.height === 750) state.height = 1050;
+  } else if(fstNoPriv){
+    heightOpts = [750];                          // FST + No Privacy: 750 only
+    if(state.height !== 750) state.height = 750;
+  } else {
+    heightOpts = OPTIONS.height;                // FST + Privacy: 1050, 1200
+    if(state.height === 750) state.height = 1050;
+  }
+  choiceButtons('heightChoices', heightOpts, 'height', v => v+'mm');
+  document.getElementById('heightNote').textContent =
+    fstNoPriv ? 'Only 750mm is available without a privacy panel.' : '';
 
   const personWrap = document.getElementById('personChoices');
   const personNote = document.getElementById('personNote');
@@ -659,6 +1033,19 @@ function render(){
   document.getElementById('kpiClusters').textContent = state.clusters;
   document.getElementById('kpiFootprint').textContent = `${state.length}×${state.depth}`;
   document.getElementById('kpiLines').textContent = rows.filter(r=>!r.na).length;
+
+  // Config code + LP — looked up from the real MOTION001-MOTION280 table.
+  // LP is the per-unit list price; the displayed total multiplies it by the
+  // number of workstations (state.clusters) the user has selected.
+  const cfgKey   = buildConfigKey();
+  const cfgLabel = buildConfigLabel();
+  const entry    = CONFIG_TABLE[cfgKey];
+  document.getElementById('configCode').textContent  = entry ? entry.code : '—';
+  document.getElementById('configLabel').textContent = cfgLabel;
+  document.getElementById('configLP').textContent    = entry ? formatIndianCurrency(entry.lp * state.clusters) : '—';
+  document.getElementById('configLPUnit').textContent = entry
+    ? `${formatIndianCurrency(entry.lp)} / unit × ${state.clusters}`
+    : '—';
 
   // Lookup record + preview
   const lk = fs

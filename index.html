@@ -271,9 +271,15 @@ footer.note{
 
         <div class="row">
           <div class="idx">—</div>
-          <div class="body">
-            <label>Privacy Panel</label>
-            <div class="choices" id="privacyChoices"></div>
+          <div class="body" style="display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0;">
+            <div style="padding:11px 14px;border-right:1px solid var(--line);">
+              <label>Privacy Panel</label>
+              <div class="choices" id="privacyChoices"></div>
+            </div>
+            <div style="padding:11px 14px;" id="privacyTypeWrap">
+              <label>Panel Type</label>
+              <div class="choices" id="privacyTypeChoices"></div>
+            </div>
           </div>
         </div>
 
@@ -415,8 +421,9 @@ const state = {
   person: 2,                           // F4
   length: 1500,                        // D6
   depth: 750,                          // D8
-  height: 300,                        // D10  (300 or 450)
+  height: 1050,                        // D10  (1050 or 1200)
   privacy: 'YES',                      // E10
+  panelType: 'MAGNETIC FAB',           // panel material type
   clusters: 1,                         // F10
 };
 
@@ -427,8 +434,9 @@ const OPTIONS = {
   person: [2, 4, 6, 8, 10],
   length: [1200, 1350, 1500, 1650, 1800],
   depth: [600, 700, 750, 800],
-  height: [300, 450],
+  height: [1050, 1200],
   privacy: ['YES', 'NO'],
+  panelType: ['MAGNETIC FAB', 'FAB'],
 };
 
 const isFS = () => state.wsType.toLowerCase() === 'free standing workstation';
@@ -536,7 +544,8 @@ function buildBOM(){
   // Row 32 — privacy panel
   let row32qty = null;
   {
-    const desc = privNo ? 'Not Applicable' : `MOTION PLUS ${subWS()} 18MM THK MAGNETIC FAB PRIVACY PNL FOR ${state.length}L TOP (WS ${state.height}HT)`;
+    const pType = state.panelType === 'MAGNETIC FAB' ? 'MAGNETIC FAB' : 'FAB';
+    const desc = privNo ? 'Not Applicable' : `MOTION PLUS ${subWS()} 18MM THK ${pType} PRIVACY PNL FOR ${state.length}L TOP (WS ${state.height}HT)`;
     const qty = privNo ? null : (fs ? state.clusters*1 : (state.person/2)*state.clusters);
     row32qty = qty;
     rows.push(mk(desc, qty, privNo));
@@ -609,6 +618,16 @@ function render(){
   const flapOpts = fs ? OPTIONS.accessFlap : OPTIONS.accessFlapBTB;
   choiceButtons('accessFlapChoices', flapOpts, 'accessFlap');
   choiceButtons('privacyChoices', OPTIONS.privacy, 'privacy');
+  // Show panel type selector only when privacy panel is YES
+  const privTypeWrap = document.getElementById('privacyTypeWrap');
+  if(state.privacy.toLowerCase() === 'no'){
+    privTypeWrap.style.opacity = '0.35';
+    privTypeWrap.style.pointerEvents = 'none';
+  } else {
+    privTypeWrap.style.opacity = '1';
+    privTypeWrap.style.pointerEvents = '';
+  }
+  choiceButtons('privacyTypeChoices', OPTIONS.panelType, 'panelType');
   choiceButtons('lengthChoices', OPTIONS.length, 'length', v => v+'mm');
   choiceButtons('depthChoices', OPTIONS.depth, 'depth', v => v+'mm');
   choiceButtons('heightChoices', OPTIONS.height, 'height', v => v+'mm');

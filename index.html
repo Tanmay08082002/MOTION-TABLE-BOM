@@ -963,7 +963,46 @@ function render(){
   if(!fs && state.accessFlap.toUpperCase() === 'NO') state.accessFlap = 'CENTRE';
   const flapOpts = fs ? OPTIONS.accessFlap : OPTIONS.accessFlapBTB;
   choiceButtons('accessFlapChoices', flapOpts, 'accessFlap');
-  choiceButtons('privacyChoices', OPTIONS.privacy, 'privacy');
+
+  // FREE STANDING + Access Flap = NO → Privacy Panel must be NO (only option)
+  const fstFlapNo = fs && state.accessFlap.toUpperCase() === 'NO';
+  // BACK TO BACK → Privacy Panel must be YES (only option)
+  if(!fs){
+    state.privacy = 'YES';
+    const privEl = document.getElementById('privacyChoices');
+    privEl.innerHTML = '';
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'choice-btn active';
+    b.textContent = 'YES';
+    b.title = 'Privacy panel is mandatory for Back to Back workstations';
+    b.style.cursor = 'default';
+    privEl.appendChild(b);
+    const noteEl = document.createElement('div');
+    noteEl.style.cssText = 'font-size:10.5px;color:var(--warn);margin-top:4px;font-family:var(--sans);font-weight:600;';
+    noteEl.textContent = 'Privacy panel is mandatory for Back to Back workstations.';
+    privEl.appendChild(noteEl);
+  } else if(fstFlapNo) {
+    // Force privacy to NO when FS + No Access Flap
+    state.privacy = 'NO';
+    // Render only the "NO" button, disabled-style
+    const privEl = document.getElementById('privacyChoices');
+    privEl.innerHTML = '';
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'choice-btn active';
+    b.textContent = 'NO';
+    b.title = 'Privacy panel not available when Access Flap is No';
+    b.style.cursor = 'default';
+    privEl.appendChild(b);
+    const noteEl = document.createElement('div');
+    noteEl.style.cssText = 'font-size:10.5px;color:var(--warn);margin-top:4px;font-family:var(--sans);font-weight:600;';
+    noteEl.textContent = 'Privacy panel not available when Access Flap is No.';
+    privEl.appendChild(noteEl);
+  } else {
+    choiceButtons('privacyChoices', OPTIONS.privacy, 'privacy');
+  }
+
   // Show panel type selector only when privacy panel is YES
   const privTypeWrap = document.getElementById('privacyTypeWrap');
   if(state.privacy.toLowerCase() === 'no'){

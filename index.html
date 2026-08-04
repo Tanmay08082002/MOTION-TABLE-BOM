@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOTION PLUS — Workstation Configurator</title>
+<link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+
+<div class="titleblock">
+  <div class="mark"><img src="sos_logo.png" alt="SOS Logo" style="height:44px;width:auto;object-fit:contain;display:block;"></div>
+  <div class="doc">BOM CONFIGURATOR &nbsp;/&nbsp; DRIVEN BY MOTIONDRAWING MASTER &amp; LOOKUP TABLES</div>
+  <div class="meta">
+    <div>REV<b>TRIAL-01</b></div>
+    <div>CREATED BY<b>AMAN & TANMAY</b></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="grid">
+
+    <!-- CONFIG PANEL -->
+    <div class="panel">
+      <div class="panel-head"><h2>Configuration</h2><span class="tag">OPTIONS</span></div>
+      <div class="spec">
+
+        <div class="row">
+          <div class="idx">A</div>
+          <div class="body">
+            <label>Select Workstation Type</label>
+            <div class="choices" id="wsTypeChoices"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">(i)</div>
+          <div class="body">
+            <label>Access Flap Location</label>
+            <div class="choices" id="accessFlapChoices"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">(ii)</div>
+          <div class="body">
+            <label>Person Count</label>
+            <div class="choices" id="personChoices"></div>
+            <div class="na-note" id="personNote" style="display:none;">Not applicable for this workstation type</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">B</div>
+          <div class="body">
+            <label>Table Length</label>
+            <div class="choices" id="lengthChoices"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">C</div>
+          <div class="body">
+            <label>Table Depth</label>
+            <div class="choices" id="depthChoices"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">D</div>
+          <div class="body">
+            <label>Privacy Panel Height (From Floor)</label>
+            <div class="choices" id="heightChoices"></div>
+            <div id="heightNote" style="font-size:10.5px;color:#8a98a6;margin-top:4px;font-family:var(--sans);"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">(i)</div>
+          <div class="body" style="display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0;">
+            <div style="padding:11px 14px;border-right:1px solid var(--line);">
+              <label>Privacy Panel</label>
+              <div class="choices" id="privacyChoices"></div>
+            </div>
+            <div style="padding:11px 14px;" id="privacyTypeWrap">
+              <label>Panel Type</label>
+              <div class="choices" id="privacyTypeChoices"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="idx">E</div>
+          <div class="body">
+            <label>Workstation</label>
+            <div class="numfield">
+              <button type="button" id="clusterMinus">−</button>
+              <input type="text" id="clusterInput" value="10" inputmode="numeric">
+              <button type="button" id="clusterPlus">+</button>
+            </div>
+            <span class="unit">no. of repeating cluster units</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="btnrow">
+        <button class="action primary" id="viewModelBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          View 3D Model
+        </button>
+        <button class="action secondary" id="exportBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export BOM
+        </button>
+        <button class="action secondary" id="downloadDxfBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+          Shop Drawing
+        </button>
+      </div>
+    </div>
+
+    <!-- PREVIEW PANEL -->
+    <div class="panel">
+      <div class="panel-head"><h2 id="previewTitle">Motion Plus Workstation</h2><span class="tag" id="previewTag">WS_1</span></div>
+      <div class="preview">
+        <div class="preview-stage" id="stage"></div>
+        <div class="preview-caption">
+          <b id="captionType">—</b>
+          <span id="captionRef">drawing ref —</span>
+        </div>
+
+        <!-- CONFIGURATION NAME -->
+        <div style="padding:12px 16px;border:1px solid var(--line);margin-bottom:14px;border-radius:2px;background:var(--paper);">
+          <div style="font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);font-weight:700;margin-bottom:6px;">Configuration</div>
+          <div id="configLabel" style="font-size:13px;font-weight:700;color:var(--teal-deep);font-family:var(--sans);line-height:1.4;">—</div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="v" id="kpiPersons">—</div><div class="l">Persons</div></div>
+          <div class="kpi"><div class="v" id="kpiClusters">—</div><div class="l">Workstation</div></div>
+          <div class="kpi"><div class="v" id="kpiFootprint">—</div><div class="l">Top Size mm</div></div>
+          <div class="kpi"><div class="v" id="kpiLines">—</div><div class="l">BOM Lines</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOM TABLE -->
+  <div class="panel bom-wrap">
+    <div class="panel-head"><h2>Bill of Materials</h2><span class="tag" id="bomMeta">—</span></div>
+    <table class="bom">
+      <thead>
+        <tr>
+          <th class="num">Sr.</th>
+          <th>Product Code</th>
+          <th>Description</th>
+          <th>Drawing No.</th>
+          <th class="num">Qty</th>
+        </tr>
+      </thead>
+      <tbody id="bomBody"></tbody>
+    </table>
+  </div>
+
+  <footer class="note">FORMULA ENGINE REPLICATES SHEET4 CELL LOGIC — D20:F34 — AGAINST MOTIONDRAWING!B:E AND LOOKUP!A:E · ALL VALUES RECOMPUTE LIVE</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- External library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+
+<!-- App modules (order matters: data → state → bom → config → preview → ui → events) -->
+<script src="./assets/js/data.js"></script>
+<script src="./assets/js/state.js"></script>
+<script src="./assets/js/bom.js"></script>
+<script src="./assets/js/config.js"></script>
+<script src="./assets/js/preview.js"></script>
+<script src="./assets/js/ui.js"></script>
+<script src="./assets/js/events.js"></script>
+
+<!-- Bootstrap: load data then wire up events and render -->
+<script>
+  loadAllData()
+    .then(() => {
+      initEvents();
+      render();
+    })
+    .catch(err => {
+      console.error('Failed to load app data:', err);
+      document.body.innerHTML = '<p style="padding:2rem;color:red;font-family:monospace;">Error loading data files. Make sure you are serving this folder over HTTP (not file://).</p>';
+    });
+</script>
+
+</body>
+</html>

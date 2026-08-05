@@ -1,0 +1,49 @@
+{
+  "wsType": [
+    "BACK TO BACK WORKSTATION",
+    "FREE STANDING WORKSTATION"
+  ],
+  "accessFlap": [
+    "LHS",
+    "RHS",
+    "CENTRE",
+    "NO"
+  ],
+  "accessFlapBTB": [
+    "LHS",
+    "RHS",
+    "CENTRE"
+  ],
+  "person": [
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "length": [
+    1200,
+    1350,
+    1500,
+    1650,
+    1800
+  ],
+  "depth": [
+    600,
+    700,
+    750,
+    800
+  ],
+  "height": [
+    1050,
+    1200
+  ],
+  "privacy": [
+    "YES",
+    "NO"
+  ],
+  "panelType": [
+    "MAGNETIC FAB",
+    "FAB"
+  ]
+}

@@ -16,9 +16,7 @@ function choiceButtons(containerId, options, currentKey, fmt) {
 
 /* ===================== PRODUCT HUB ===================== */
 function renderProductHub() {
-  document.querySelectorAll('.ph-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.product === state.activeProduct);
-  });
+  // Product is now chosen on the landing pages (see router.js); this only shows the matching panel.
   const motionWrap = document.getElementById('motionWrap');
   const hubWrap    = document.getElementById('hubWrap');
   if (motionWrap) motionWrap.style.display = isMotion() ? '' : 'none';

@@ -10,11 +10,6 @@ function showToast(msg) {
 /* ===================== EVENTS ===================== */
 function initEvents() {
 
-  /* ---- Product Hub ---- */
-  document.querySelectorAll('.ph-btn').forEach(btn => {
-    btn.addEventListener('click', () => { state.activeProduct = btn.dataset.product; render(); });
-  });
-
   /* ---- Cluster +/- ---- */
   document.getElementById('clusterMinus').addEventListener('click', () => {
     state.clusters = Math.max(1, state.clusters - 1); render();
@@ -40,20 +35,6 @@ function initEvents() {
   ['discountPct','gstPct','installPct'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', updateSummary);
-  });
-
-  /* ---- HUB panel clicks (delegated) ---- */
-  document.getElementById('hubGrid').addEventListener('click', e => {
-    const hubBtn = e.target.closest('[data-hub]');
-    if (hubBtn) {
-      state.hubProduct = hubBtn.dataset.hub;
-      const prd = HUB_PRODUCTS.find(p => p.id === state.hubProduct);
-      state.hubVariant = prd && prd.variants.length > 0 ? prd.variants[0] : null;
-      renderHubPanel();
-      return;
-    }
-    const varBtn = e.target.closest('[data-variant]');
-    if (varBtn) { state.hubVariant = varBtn.dataset.variant; renderHubPanel(); }
   });
 
   /* ---- View 3D Model ---- */

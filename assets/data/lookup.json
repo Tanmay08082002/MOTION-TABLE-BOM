@@ -1,0 +1,100 @@
+[
+  {
+    "workstation": "LINEAR",
+    "type": "FREE STANDING WORKSTATION",
+    "option": "YES",
+    "flap": "CENTRE",
+    "image": "WS_1"
+  },
+  {
+    "workstation": "LINEAR",
+    "type": "BACK TO BACK WORKSTATION",
+    "option": 2,
+    "flap": "CENTRE",
+    "image": "WS_2"
+  },
+  {
+    "workstation": "LINEAR",
+    "type": "BACK TO BACK WORKSTATION",
+    "option": 4,
+    "flap": "CENTRE",
+    "image": "WS_3"
+  },
+  {
+    "workstation": "LINEAR",
+    "type": "BACK TO BACK WORKSTATION",
+    "option": 6,
+    "flap": "CENTRE",
+    "image": "WS_4"
+  },
+  {
+    "workstation": "LINEAR",
+    "type": "BACK TO BACK WORKSTATION",
+    "option": 8,
+    "flap": "CENTRE",
+    "image": "WS_5"
+  },
+  {
+    "workstation": "LINEAR",
+    "type": "BACK TO BACK WORKSTATION",
+    "option": 10,
+    "flap": "CENTRE",
+    "image": "WS_6"
+  },
+  {
+    "workstation": "LTYPE",
+    "type": "L-TYPE FREE STANDING WORKSTATION",
+    "option": "YES",
+    "flap": "CENTRE",
+    "image": "LT_1"
+  },
+  {
+    "workstation": "LTYPE",
+    "type": "L-TYPE BACK TO BACK WORKSTATION",
+    "option": 2,
+    "flap": "CENTRE",
+    "image": "LT_2"
+  },
+  {
+    "workstation": "LTYPE",
+    "type": "L-TYPE BACK TO BACK WORKSTATION",
+    "option": 4,
+    "flap": "CENTRE",
+    "image": "LT_3"
+  },
+  {
+    "workstation": "LTYPE",
+    "type": "L-TYPE BACK TO BACK WORKSTATION",
+    "option": 6,
+    "flap": "CENTRE",
+    "image": "LT_4"
+  },
+  {
+    "workstation": "LTYPE",
+    "type": "L-TYPE BACK TO BACK WORKSTATION",
+    "option": 8,
+    "flap": "CENTRE",
+    "image": "LT_5"
+  },
+  {
+    "workstation": "LTYPE",
+    "type": "L-TYPE BACK TO BACK WORKSTATION",
+    "option": 10,
+    "flap": "CENTRE",
+    "image": "LT_6"
+  },
+  {
+    "workstation": "120DEG",
+    "type": "120 DEG 1P",
+    "option": "YES",
+    "flap": "CENTRE",
+    "image": "D120_1P"
+  },
+  {
+    "workstation": "120DEG",
+    "type": "120 DEG 3P",
+    "option": 3,
+    "flap": "CENTRE",
+    "image": "D120_3P"
+  }
+]

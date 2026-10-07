@@ -1,0 +1,418 @@
+{
+  "LFS-01-FLAP-PNL-MFB-L1200-D600-H1050": {
+    "code": "MLT-001",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-FAB-L1200-D600-H1050": {
+    "code": "MLT-002",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-MFB-L1200-D600-H1200": {
+    "code": "MLT-003",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-FAB-L1200-D600-H1200": {
+    "code": "MLT-004",
+    "lp": 0
+  },
+  "LFS-01-FLAP-NOP-L1200-D600-H750": {
+    "code": "MLT-005",
+    "lp": 0
+  },
+  "LFS-01-NOFLAP-NOP-L1200-D600-H750": {
+    "code": "MLT-006",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-MFB-L1350-D600-H1050": {
+    "code": "MLT-007",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-FAB-L1350-D600-H1050": {
+    "code": "MLT-008",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-MFB-L1350-D600-H1200": {
+    "code": "MLT-009",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-FAB-L1350-D600-H1200": {
+    "code": "MLT-010",
+    "lp": 0
+  },
+  "LFS-01-FLAP-NOP-L1350-D600-H750": {
+    "code": "MLT-011",
+    "lp": 0
+  },
+  "LFS-01-NOFLAP-NOP-L1350-D600-H750": {
+    "code": "MLT-012",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-MFB-L1500-D600-H1050": {
+    "code": "MLT-013",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-FAB-L1500-D600-H1050": {
+    "code": "MLT-014",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-MFB-L1500-D600-H1200": {
+    "code": "MLT-015",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-FAB-L1500-D600-H1200": {
+    "code": "MLT-016",
+    "lp": 0
+  },
+  "LFS-01-FLAP-NOP-L1500-D600-H750": {
+    "code": "MLT-017",
+    "lp": 0
+  },
+  "LFS-01-NOFLAP-NOP-L1500-D600-H750": {
+    "code": "MLT-018",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-MFB-L1650-D600-H1050": {
+    "code": "MLT-019",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-FAB-L1650-D600-H1050": {
+    "code": "MLT-020",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-MFB-L1650-D600-H1200": {
+    "code": "MLT-021",
+    "lp": 0
+  },
+  "LFS-01-FLAP-PNL-FAB-L1650-D600-H1200": {
+    "code": "MLT-022",
+    "lp": 0
+  },
+  "LFS-01-FLAP-NOP-L1650-D600-H750": {
+    "code": "MLT-023",
+    "lp": 0
+  },
+  "LFS-01-NOFLAP-NOP-L1650-D600-H750": {
+    "code": "MLT-024",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-MFB-L1200-D600-H1050": {
+    "code": "MLT-025",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-FAB-L1200-D600-H1050": {
+    "code": "MLT-026",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-MFB-L1200-D600-H1200": {
+    "code": "MLT-027",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-FAB-L1200-D600-H1200": {
+    "code": "MLT-028",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-MFB-L1350-D600-H1050": {
+    "code": "MLT-029",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-FAB-L1350-D600-H1050": {
+    "code": "MLT-030",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-MFB-L1350-D600-H1200": {
+    "code": "MLT-031",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-FAB-L1350-D600-H1200": {
+    "code": "MLT-032",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-MFB-L1500-D600-H1050": {
+    "code": "MLT-033",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-FAB-L1500-D600-H1050": {
+    "code": "MLT-034",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-MFB-L1500-D600-H1200": {
+    "code": "MLT-035",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-FAB-L1500-D600-H1200": {
+    "code": "MLT-036",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-MFB-L1650-D600-H1050": {
+    "code": "MLT-037",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-FAB-L1650-D600-H1050": {
+    "code": "MLT-038",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-MFB-L1650-D600-H1200": {
+    "code": "MLT-039",
+    "lp": 0
+  },
+  "LBTB-02-FLAP-PNL-FAB-L1650-D600-H1200": {
+    "code": "MLT-040",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-MFB-L1200-D600-H1050": {
+    "code": "MLT-041",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-FAB-L1200-D600-H1050": {
+    "code": "MLT-042",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-MFB-L1200-D600-H1200": {
+    "code": "MLT-043",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-FAB-L1200-D600-H1200": {
+    "code": "MLT-044",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-MFB-L1350-D600-H1050": {
+    "code": "MLT-045",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-FAB-L1350-D600-H1050": {
+    "code": "MLT-046",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-MFB-L1350-D600-H1200": {
+    "code": "MLT-047",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-FAB-L1350-D600-H1200": {
+    "code": "MLT-048",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-MFB-L1500-D600-H1050": {
+    "code": "MLT-049",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-FAB-L1500-D600-H1050": {
+    "code": "MLT-050",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-MFB-L1500-D600-H1200": {
+    "code": "MLT-051",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-FAB-L1500-D600-H1200": {
+    "code": "MLT-052",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-MFB-L1650-D600-H1050": {
+    "code": "MLT-053",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-FAB-L1650-D600-H1050": {
+    "code": "MLT-054",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-MFB-L1650-D600-H1200": {
+    "code": "MLT-055",
+    "lp": 0
+  },
+  "LBTB-04-FLAP-PNL-FAB-L1650-D600-H1200": {
+    "code": "MLT-056",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-MFB-L1200-D600-H1050": {
+    "code": "MLT-057",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-FAB-L1200-D600-H1050": {
+    "code": "MLT-058",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-MFB-L1200-D600-H1200": {
+    "code": "MLT-059",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-FAB-L1200-D600-H1200": {
+    "code": "MLT-060",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-MFB-L1350-D600-H1050": {
+    "code": "MLT-061",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-FAB-L1350-D600-H1050": {
+    "code": "MLT-062",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-MFB-L1350-D600-H1200": {
+    "code": "MLT-063",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-FAB-L1350-D600-H1200": {
+    "code": "MLT-064",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-MFB-L1500-D600-H1050": {
+    "code": "MLT-065",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-FAB-L1500-D600-H1050": {
+    "code": "MLT-066",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-MFB-L1500-D600-H1200": {
+    "code": "MLT-067",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-FAB-L1500-D600-H1200": {
+    "code": "MLT-068",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-MFB-L1650-D600-H1050": {
+    "code": "MLT-069",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-FAB-L1650-D600-H1050": {
+    "code": "MLT-070",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-MFB-L1650-D600-H1200": {
+    "code": "MLT-071",
+    "lp": 0
+  },
+  "LBTB-06-FLAP-PNL-FAB-L1650-D600-H1200": {
+    "code": "MLT-072",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-MFB-L1200-D600-H1050": {
+    "code": "MLT-073",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-FAB-L1200-D600-H1050": {
+    "code": "MLT-074",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-MFB-L1200-D600-H1200": {
+    "code": "MLT-075",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-FAB-L1200-D600-H1200": {
+    "code": "MLT-076",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-MFB-L1350-D600-H1050": {
+    "code": "MLT-077",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-FAB-L1350-D600-H1050": {
+    "code": "MLT-078",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-MFB-L1350-D600-H1200": {
+    "code": "MLT-079",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-FAB-L1350-D600-H1200": {
+    "code": "MLT-080",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-MFB-L1500-D600-H1050": {
+    "code": "MLT-081",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-FAB-L1500-D600-H1050": {
+    "code": "MLT-082",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-MFB-L1500-D600-H1200": {
+    "code": "MLT-083",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-FAB-L1500-D600-H1200": {
+    "code": "MLT-084",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-MFB-L1650-D600-H1050": {
+    "code": "MLT-085",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-FAB-L1650-D600-H1050": {
+    "code": "MLT-086",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-MFB-L1650-D600-H1200": {
+    "code": "MLT-087",
+    "lp": 0
+  },
+  "LBTB-08-FLAP-PNL-FAB-L1650-D600-H1200": {
+    "code": "MLT-088",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-MFB-L1200-D600-H1050": {
+    "code": "MLT-089",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-FAB-L1200-D600-H1050": {
+    "code": "MLT-090",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-MFB-L1200-D600-H1200": {
+    "code": "MLT-091",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-FAB-L1200-D600-H1200": {
+    "code": "MLT-092",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-MFB-L1350-D600-H1050": {
+    "code": "MLT-093",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-FAB-L1350-D600-H1050": {
+    "code": "MLT-094",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-MFB-L1350-D600-H1200": {
+    "code": "MLT-095",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-FAB-L1350-D600-H1200": {
+    "code": "MLT-096",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-MFB-L1500-D600-H1050": {
+    "code": "MLT-097",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-FAB-L1500-D600-H1050": {
+    "code": "MLT-098",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-MFB-L1500-D600-H1200": {
+    "code": "MLT-099",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-FAB-L1500-D600-H1200": {
+    "code": "MLT-100",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-MFB-L1650-D600-H1050": {
+    "code": "MLT-101",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-FAB-L1650-D600-H1050": {
+    "code": "MLT-102",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-MFB-L1650-D600-H1200": {
+    "code": "MLT-103",
+    "lp": 0
+  },
+  "LBTB-10-FLAP-PNL-FAB-L1650-D600-H1200": {
+    "code": "MLT-104",
+    "lp": 0
+  }
+}

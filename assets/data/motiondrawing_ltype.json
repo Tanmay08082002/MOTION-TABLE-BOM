@@ -1,0 +1,404 @@
+[
+  {
+    "code": "MPLT-T001",
+    "desc": "MOTION PLUS U/S RECTANGULAR 3 STAGE 2 MOTOR FOR L-TYPE ONE SIDED(JC35TF-R13S) JIECANG MAKE",
+    "drawing": "SW-LT-T001",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T002",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION L TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1200LX600D",
+    "drawing": "SW-LT-T002",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T003",
+    "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE L-TYPE FREE STANDING WORKSTATION U/S @1200L",
+    "drawing": "SW-LT-T003",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T004",
+    "desc": "MOTION PLUS TOP SUPPORT BRACKET FOR JIECANG MAKE L-TYPE FREE STANDING WORKSTATION U/S @600D",
+    "drawing": "SW-LT-T004",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T005",
+    "desc": "MOTION PLUS FOOT (SET) FOR JIECANG MAKE L-TYPE ONE SIDED MOTION U/S @600D (FOR TOP DEPTH 600)",
+    "drawing": "SW-LT-T005",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T006",
+    "desc": "ALUMINIUM ACCESS FLAP WITH SOFT CLOSE DIECASTED 450X145",
+    "drawing": "SW-LT-T006",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T007",
+    "desc": "SWITCH MOUNTING BOX CABIN+CONF TBL 450LX212DX125H",
+    "drawing": "SW-LT-T007",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T008",
+    "desc": "SWITCH MOUNTING BOX SWITCH PLATE 450LX168D",
+    "drawing": "SW-LT-T008",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T009",
+    "desc": "MOTION PLUS VERTIBRE ( FLOOR TO SWITCH MOUNTING BOX) (BOOKING QTY-2 NO.S)",
+    "drawing": "SW-LT-T009",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T010",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1200L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T010",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T011",
+    "desc": "L-TYPE PRIVACY PANEL BRACKET 6MM",
+    "drawing": "SW-LT-T011",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T012",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1200L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T012",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T013",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1200L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T013",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T014",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1200L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T014",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T015",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION L TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1350LX600D",
+    "drawing": "SW-LT-T015",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T016",
+    "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE L-TYPE FREE STANDING WORKSTATION U/S @1350L",
+    "drawing": "SW-LT-T016",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T017",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1350L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T017",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T018",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1350L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T018",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T019",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1350L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T019",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T020",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1350L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T020",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T021",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION L TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1500LX600D",
+    "drawing": "SW-LT-T021",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T022",
+    "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE L-TYPE FREE STANDING WORKSTATION U/S @1500L",
+    "drawing": "SW-LT-T022",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T023",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1500L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T023",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T024",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1500L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T024",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T025",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1500L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T025",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T026",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1500L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T026",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T027",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION L TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1650LX600D",
+    "drawing": "SW-LT-T027",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T028",
+    "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE L-TYPE FREE STANDING WORKSTATION U/S @1650L",
+    "drawing": "SW-LT-T028",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T029",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1650L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T029",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T030",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1650L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T030",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T031",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1650L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T031",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T032",
+    "desc": "MOTION PLUS L-TYPE FREE STANDING WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1650L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T032",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T033",
+    "desc": "MOTION PLUS U/S 3 STAGE 2 MOTOR L-TYPE BACK TO BACK WS - HT. ADJ U/S(JC35TF-R13S)(NEW TYPE)JIECANG MAKE",
+    "drawing": "SW-LT-T033",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T034",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION L TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1200LX600D",
+    "drawing": "SW-LT-T034",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T035",
+    "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE L-TYPE BACK TO BACK WORKSTATION U/S @1200L",
+    "drawing": "SW-LT-T035",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T036",
+    "desc": "MOTION PLUS TOP SUPPORT BRACKET FOR JIECANG MAKE L-TYPE BACK TO BACK WORKSTATION U/S @600D",
+    "drawing": "SW-LT-T036",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T037",
+    "desc": "MOTION PLUS BOTTOM SUPPORT CROSS MEMBER FOR JIECANG MAKE L-TYPE BACK TO BACK WORKSTATION U/S @600D",
+    "drawing": "SW-LT-T037",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T038",
+    "desc": "MOTION PLUS CABLE TRAY FOR L-TYPE BACK TO BACK 2 P WORKSTATION 1200L",
+    "drawing": "SW-LT-T038",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T039",
+    "desc": "SPL MOTION PLUS VERTICAL DUCT PWCD FOR SHARING WS",
+    "drawing": "SW-LT-T039",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T040",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1200L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T040",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T041",
+    "desc": "MOTION PLUS L-TYPE SCREEN HOLDING BKTS LHS",
+    "drawing": "SW-LT-T041",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T042",
+    "desc": "MOTION PLUS L-TYPE SCREEN HOLDING BKTS RHS",
+    "drawing": "SW-LT-T042",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T043",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1200L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T043",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T044",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1200L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T044",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T045",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1200L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T045",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T046",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION L TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1350LX600D",
+    "drawing": "SW-LT-T046",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T047",
+    "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE L-TYPE BACK TO BACK WORKSTATION U/S @1350L",
+    "drawing": "SW-LT-T047",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T048",
+    "desc": "MOTION PLUS CABLE TRAY FOR L-TYPE BACK TO BACK 2 P WORKSTATION 1350L",
+    "drawing": "SW-LT-T048",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T049",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1350L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T049",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T050",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1350L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T050",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T051",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1350L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T051",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T052",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1350L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T052",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T053",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION L TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1500LX600D",
+    "drawing": "SW-LT-T053",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T054",
+    "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE L-TYPE BACK TO BACK WORKSTATION U/S @1500L",
+    "drawing": "SW-LT-T054",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T055",
+    "desc": "MOTION PLUS CABLE TRAY FOR L-TYPE BACK TO BACK 2 P WORKSTATION 1500L",
+    "drawing": "SW-LT-T055",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T056",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1500L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T056",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T057",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1500L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T057",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T058",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1500L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T058",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T059",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1500L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T059",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T060",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION L TOP 25MM PPB WITH FRONT SIDE CHAMFER EDGE & COR RAD 1650LX600D",
+    "drawing": "SW-LT-T060",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T061",
+    "desc": "MOTION PLUS HORIZONTAL CROSS MEMBER FOR JIECANG MAKE L-TYPE BACK TO BACK WORKSTATION U/S @1650L",
+    "drawing": "SW-LT-T061",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T062",
+    "desc": "MOTION PLUS CABLE TRAY FOR L-TYPE BACK TO BACK 2 P WORKSTATION 1650L",
+    "drawing": "SW-LT-T062",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T063",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1650L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T063",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T064",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1650L TOP (WS 1050HT)",
+    "drawing": "SW-LT-T064",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T065",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK MAGNETIC FAB PRIVACY PNL FOR 1650L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T065",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T066",
+    "desc": "MOTION PLUS L-TYPE BACK TO BACK WORKSTATION 18MM THK FAB PRIVACY PNL FOR 1650L TOP (WS 1200HT)",
+    "drawing": "SW-LT-T066",
+    "lp": 0
+  },
+  {
+    "code": "MPLT-T067",
+    "desc": "MOTION PLUS CABLE TRAY CONNECTOR FOR L-TYPE BACK TO BACK WORKSTATION SHARING JUNCTION",
+    "drawing": "SW-LT-T067",
+    "lp": 0
+  }
+]

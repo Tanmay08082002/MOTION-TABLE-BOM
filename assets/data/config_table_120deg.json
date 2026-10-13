@@ -1,0 +1,122 @@
+{
+  "D1P-01-FLAP-PNL-MFB-L1200-D600-H1050": {
+    "code": "M120-001",
+    "lp": 0
+  },
+  "D1P-01-FLAP-PNL-FAB-L1200-D600-H1050": {
+    "code": "M120-002",
+    "lp": 0
+  },
+  "D1P-01-FLAP-PNL-MFB-L1200-D600-H1200": {
+    "code": "M120-003",
+    "lp": 0
+  },
+  "D1P-01-FLAP-PNL-FAB-L1200-D600-H1200": {
+    "code": "M120-004",
+    "lp": 0
+  },
+  "D1P-01-FLAP-NOP-L1200-D600-H750": {
+    "code": "M120-005",
+    "lp": 0
+  },
+  "D1P-01-NOFLAP-NOP-L1200-D600-H750": {
+    "code": "M120-006",
+    "lp": 0
+  },
+  "D1P-01-FLAP-PNL-MFB-L1350-D600-H1050": {
+    "code": "M120-007",
+    "lp": 0
+  },
+  "D1P-01-FLAP-PNL-FAB-L1350-D600-H1050": {
+    "code": "M120-008",
+    "lp": 0
+  },
+  "D1P-01-FLAP-PNL-MFB-L1350-D600-H1200": {
+    "code": "M120-009",
+    "lp": 0
+  },
+  "D1P-01-FLAP-PNL-FAB-L1350-D600-H1200": {
+    "code": "M120-010",
+    "lp": 0
+  },
+  "D1P-01-FLAP-NOP-L1350-D600-H750": {
+    "code": "M120-011",
+    "lp": 0
+  },
+  "D1P-01-NOFLAP-NOP-L1350-D600-H750": {
+    "code": "M120-012",
+    "lp": 0
+  },
+  "D1P-01-FLAP-PNL-MFB-L1500-D600-H1050": {
+    "code": "M120-013",
+    "lp": 0
+  },
+  "D1P-01-FLAP-PNL-FAB-L1500-D600-H1050": {
+    "code": "M120-014",
+    "lp": 0
+  },
+  "D1P-01-FLAP-PNL-MFB-L1500-D600-H1200": {
+    "code": "M120-015",
+    "lp": 0
+  },
+  "D1P-01-FLAP-PNL-FAB-L1500-D600-H1200": {
+    "code": "M120-016",
+    "lp": 0
+  },
+  "D1P-01-FLAP-NOP-L1500-D600-H750": {
+    "code": "M120-017",
+    "lp": 0
+  },
+  "D1P-01-NOFLAP-NOP-L1500-D600-H750": {
+    "code": "M120-018",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-MFB-L1200-D600-H1050": {
+    "code": "M120-019",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-FAB-L1200-D600-H1050": {
+    "code": "M120-020",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-MFB-L1200-D600-H1200": {
+    "code": "M120-021",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-FAB-L1200-D600-H1200": {
+    "code": "M120-022",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-MFB-L1350-D600-H1050": {
+    "code": "M120-023",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-FAB-L1350-D600-H1050": {
+    "code": "M120-024",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-MFB-L1350-D600-H1200": {
+    "code": "M120-025",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-FAB-L1350-D600-H1200": {
+    "code": "M120-026",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-MFB-L1500-D600-H1050": {
+    "code": "M120-027",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-FAB-L1500-D600-H1050": {
+    "code": "M120-028",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-MFB-L1500-D600-H1200": {
+    "code": "M120-029",
+    "lp": 0
+  },
+  "D3P-03-FLAP-PNL-FAB-L1500-D600-H1200": {
+    "code": "M120-030",
+    "lp": 0
+  }
+}
